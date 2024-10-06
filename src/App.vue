@@ -31,7 +31,7 @@ const isLoginPage = computed(() => router.currentRoute.value.name === 'Login')
 <template>
   <LoadingPage :show="authStore.IsLoggingInProgress" />
   <div class="app">
-    <SideBar class="w-80" />
+    <SideBar />
     <div
       class="scrollbox flex max-h-[100vh] w-full flex-col items-center overflow-y-auto"
       :class="{

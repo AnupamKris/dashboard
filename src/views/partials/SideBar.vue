@@ -1,7 +1,7 @@
 <script setup>
 import { useAuthStore } from '@/store/auth.js'
 import { RouterLink, useRouter } from 'vue-router'
-import Logo from '@/assets/images/logo-full-inverse-subtitle.png'
+import Logo from '@/assets/images/logo.png'
 import ChangePasswordModal from '@/views/partials/ChangePasswordModal.vue'
 import { computed, onMounted, ref } from 'vue'
 import SideBarOption from '@/views/partials/SideBarOption.vue'
@@ -9,6 +9,8 @@ import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { useToast } from 'vue-toastification'
 import ModalDialog from '@/views/components/ModalDialog.vue'
+import Separator from '@/views/components/Separator.vue'
+import { Icon } from '@iconify/vue'
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -106,212 +108,114 @@ const startCountDown = () => {
 <template>
   <aside
     v-if="isShowSideBar"
-    class="scrollbox flex h-screen flex-col overflow-y-auto border-r bg-primary-600 px-2 pb-2 pt-6">
-    <div class="px-3">
-      <RouterLink to="/">
-        <img :src="Logo" alt="logo" class="w-full max-w-40" />
+    class="scrollbox flex h-screen w-14 flex-col overflow-y-hidden border-r px-2 pb-2 pt-6 transition-all duration-300 hover:w-72">
+    <div class="flex w-full items-center justify-center">
+      <RouterLink to="/" class="flex w-full items-center">
+        <img :src="Logo" alt="logo" class="ml-1 w-7" />
+
+        <span class="nav-text w-fit pl-0 font-semibold"
+          >Swiftwave
+          <p class="text-muted-foreground text-xs">v{{ swVersion }}</p>
+        </span>
       </RouterLink>
     </div>
-    <div class="mt-6 flex flex-1 flex-col justify-between">
-      <nav>
-        <SideBarOption :active-urls="['Deploy Application', 'Deploy Stack', 'App Store', 'Install from App Store']">
-          <template #icon>
-            <font-awesome-icon icon="fa-solid fa-hammer" />
-          </template>
-          <template #title> Deploy Application</template>
-          <template #content>
-            <div class="space-y-2">
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-50 hover:text-gray-700"
-                to="/deploy/app-store">
-                <font-awesome-icon icon="fa-solid fa-store" />
-                <span class="mx-2 text-sm font-medium">App Store</span>
-              </RouterLink>
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-50 hover:text-gray-700"
-                to="/deploy/application">
-                <font-awesome-icon icon="fa-solid fa-hammer" />
-                <span class="mx-2 text-sm font-medium">Deploy App</span>
-              </RouterLink>
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-50 hover:text-gray-700"
-                to="/deploy/stack">
-                <font-awesome-icon icon="fa-solid fa-cubes-stacked" />
-                <span class="mx-2 text-sm font-medium">Deploy Stack</span>
-              </RouterLink>
-            </div>
-          </template>
-        </SideBarOption>
+    <div class="mt-6 flex w-full flex-1 flex-col justify-between">
+      <nav class="flex w-full flex-col items-center justify-start">
+        <Separator class="w-2/3" />
+        <RouterLink class="router-link" to="/deploy/app-store">
+          <Icon icon="lucide:store" class="h-5 w-5" />
+          <span class="nav-text">App Store</span>
+        </RouterLink>
 
-        <SideBarOption :active-urls="['Applications', 'Persistent Volumes']">
-          <template #icon>
-            <font-awesome-icon icon="fa-solid fa-box" />
-          </template>
-          <template #title> Applications & Volumes</template>
-          <template #content>
-            <div class="space-y-2">
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                to="/applications">
-                <font-awesome-icon icon="fa-solid fa-box" />
-                <span class="mx-2 text-sm font-medium">Applications</span>
-              </RouterLink>
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                to="/persistent-volumes">
-                <font-awesome-icon icon="fa-solid fa-hard-drive" />
-                <span class="mx-2 text-sm font-medium">Persistent Volumes</span>
-              </RouterLink>
-            </div>
-          </template>
-        </SideBarOption>
+        <RouterLink class="router-link" to="/deploy/application">
+          <Icon icon="lucide-lab:layout-grid-plus" class="h-5 w-5" />
+          <span class="nav-text">Deploy App</span>
+        </RouterLink>
+        <RouterLink class="router-link" to="/deploy/stack">
+          <Icon icon="ph:stack" class="h-5 w-5" />
+          <span class="nav-text">Deploy Stack</span>
+        </RouterLink>
+        <Separator class="w-2/3" />
+        <RouterLink class="router-link" to="/applications">
+          <Icon icon="lucide:box" class="h-5 w-5" />
+          <span class="nav-text">Applications</span>
+        </RouterLink>
+        <RouterLink class="router-link" to="/persistent-volumes">
+          <Icon icon="lucide:hard-drive" class="h-5 w-5" />
+          <span class="nav-text">Persistent Volumes</span>
+        </RouterLink>
+        <Separator class="w-2/3" />
+        <RouterLink class="router-link" to="/domains">
+          <Icon icon="lucide:globe" class="h-5 w-5" />
+          <span class="nav-text">Domains</span>
+        </RouterLink>
+        <RouterLink class="router-link" to="/ingress-rules">
+          <Icon icon="lucide:waypoints" class="h-5 w-5" />
+          <span class="nav-text">Ingress Rules</span>
+        </RouterLink>
+        <RouterLink class="router-link" to="/redirect-rules">
+          <Icon icon="lucide:send" class="h-5 w-5" />
+          <span class="nav-text">Redirect Rules</span>
+        </RouterLink>
+        <Separator class="w-2/3" />
 
-        <SideBarOption :active-urls="['Domains', 'Redirect Rules', 'Ingress Rules']">
-          <template #icon>
-            <font-awesome-icon icon="fa-solid fa-route" />
-          </template>
-          <template #title>Manage Routing</template>
-          <template #content>
-            <div class="space-y-2">
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                to="/domains">
-                <font-awesome-icon icon="fa-solid fa-link" />
-                <span class="mx-2 text-sm font-medium">Domains</span>
-              </RouterLink>
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                to="/ingress-rules">
-                <font-awesome-icon icon="fa-solid fa-network-wired" />
-                <span class="mx-2 text-sm font-medium">Ingress Rules</span>
-              </RouterLink>
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                to="/redirect-rules">
-                <font-awesome-icon icon="fa-solid fa-location-arrow" />
-                <span class="mx-2 text-sm font-medium">Redirect Rules</span>
-              </RouterLink>
-            </div>
-          </template>
-        </SideBarOption>
+        <RouterLink class="router-link" to="/git-credentials">
+          <Icon icon="lucide:fingerprint" class="h-5 w-5" />
+          <span class="nav-text">Git Credentials</span>
+        </RouterLink>
+        <!-- TODO: Combine with git credentials -->
+        <!-- <RouterLink class="router-link" to="/image-registry-credentials">
+          <font-awesome-icon icon="fa-solid fa-cloud" />
+          <span class="nav-text">Image Reg Credentials</span>
+        </RouterLink> -->
 
-        <SideBarOption :active-urls="['Git Credentials', 'Image Registry Credentials']">
-          <template #icon>
-            <font-awesome-icon icon="fa-solid fa-vault" />
-          </template>
-          <template #title>Manage Credentials</template>
-          <template #content>
-            <div class="space-y-2">
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                to="/git-credentials">
-                <font-awesome-icon icon="fa-solid fa-code-branch" />
-                <span class="mx-2 text-sm font-medium">Git Credentials</span>
-              </RouterLink>
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                to="/image-registry-credentials">
-                <font-awesome-icon icon="fa-solid fa-cloud" />
-                <span class="mx-2 text-sm font-medium">Image Reg Credentials</span>
-              </RouterLink>
-            </div>
-          </template>
-        </SideBarOption>
+        <RouterLink class="router-link" to="/app_auth/basic_authentication">
+          <Icon icon="lucide:shield-check" class="h-5 w-5" />
+          <span class="nav-text">Basic Authentication</span>
+        </RouterLink>
 
-        <SideBarOption :active-urls="['Application Auth Basic ACL']">
-          <template #icon>
-            <font-awesome-icon icon="fa-solid fa-shield-halved" />
-          </template>
-          <template #title>Protect Application</template>
-          <template #content>
-            <div class="space-y-2">
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                to="/app_auth/basic_authentication">
-                <font-awesome-icon icon="fa-solid fa-user-shield" />
-                <span class="mx-2 text-sm font-medium">Basic Authentication</span>
-              </RouterLink>
-            </div>
-          </template>
-        </SideBarOption>
+        <Separator class="w-2/3" />
 
-        <SideBarOption :active-urls="['Servers']">
-          <template #icon>
-            <font-awesome-icon icon="fa-solid fa-server" />
-          </template>
-          <template #title>Manage Servers</template>
-          <template #content>
-            <div class="space-y-2">
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                to="/servers">
-                <font-awesome-icon icon="fa-solid fa-list-ul" />
-                <span class="mx-2 text-sm font-medium">Server list</span>
-              </RouterLink>
-            </div>
-          </template>
-        </SideBarOption>
+        <RouterLink class="router-link" to="/servers">
+          <Icon icon="lucide:server" class="h-5 w-5" />
+          <span class="nav-text">Server list</span>
+        </RouterLink>
 
-        <SideBarOption :active-urls="['System Logs']">
-          <template #icon>
-            <font-awesome-icon icon="fa-solid fa-gear" />
-          </template>
-          <template #title> Manage System</template>
-          <template #content>
-            <div class="space-y-2">
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                to="/logs">
-                <font-awesome-icon icon="fa-solid fa-file-waveform" />
-                <span class="mx-2 text-sm font-medium">System Logs</span>
-              </RouterLink>
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                to="/setup?update=1">
-                <font-awesome-icon icon="fa-solid fa-wrench" />
-                <span class="mx-2 text-sm font-medium">System Configuration</span>
-              </RouterLink>
-              <div
-                @click="systemRestart"
-                class="flex transform cursor-pointer items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700">
-                <font-awesome-icon icon="fa-solid fa-power-off" />
-                <span class="mx-2 text-sm font-medium">System Restart</span>
-              </div>
-            </div>
-          </template>
-        </SideBarOption>
+        <RouterLink class="router-link" to="/logs">
+          <Icon icon="lucide:square-activity" class="h-5 w-5" />
+          <span class="nav-text">System Logs</span>
+        </RouterLink>
+        <RouterLink class="router-link" to="/setup?update=1">
+          <Icon icon="lucide:wrench" class="h-5 w-5" />
+          <span class="nav-text">System Config</span>
+        </RouterLink>
 
-        <SideBarOption :active-urls="['Users']">
-          <template #icon>
-            <font-awesome-icon icon="fa-solid fa-user-tie" />
-          </template>
-          <template #title> Administration</template>
-          <template #content>
-            <div class="space-y-2">
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                to="/users">
-                <font-awesome-icon icon="fa-solid fa-users" />
-                <span class="mx-2 text-sm font-medium">Manage Users</span>
-              </RouterLink>
-              <div
-                class="flex transform cursor-pointer items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                @click="openChangePasswordModal">
-                <font-awesome-icon icon="fa-solid fa-key" />
-                <span class="mx-2 text-sm font-medium">Change Password</span>
-              </div>
-              <a
-                class="flex transform cursor-pointer items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                @click="logoutWithConfirmation">
-                <font-awesome-icon icon="fa-solid fa-right-from-bracket" />
-                <span class="mx-2 text-sm font-medium">Logout</span>
-              </a>
-            </div>
-          </template>
-        </SideBarOption>
+        <RouterLink class="router-link" to="/users">
+          <Icon icon="lucide:users" class="h-5 w-5" />
+          <span class="nav-text">Manage Users</span>
+        </RouterLink>
+        <div
+          @click="systemRestart"
+          class="flex transform cursor-pointer items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700">
+          <font-awesome-icon icon="fa-solid fa-power-off" />
+          <span class="nav-text">System Restart</span>
+        </div>
+
+        <div
+          class="flex transform cursor-pointer items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+          @click="openChangePasswordModal">
+          <font-awesome-icon icon="fa-solid fa-key" />
+          <span class="nav-text">Change Password</span>
+        </div>
+        <a
+          class="flex transform cursor-pointer items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+          @click="logoutWithConfirmation">
+          <font-awesome-icon icon="fa-solid fa-right-from-bracket" />
+          <span class="nav-text">Logout</span>
+        </a>
       </nav>
     </div>
-    <div class="flex justify-between px-2 text-sm font-medium text-white">
+    <div class="flex justify-between px-2 text-sm font-medium">
       <span>Auto-logout {{ authStore.sessionRelativeTimeoutStatus }}</span>
       <span> v{{ swVersion }}</span>
     </div>
@@ -334,12 +238,27 @@ const startCountDown = () => {
 </template>
 
 <style scoped>
-.router-link-exact-active {
-  @apply bg-gray-100 text-gray-700;
-}
-
 .scrollbox::-webkit-scrollbar {
   width: 12px;
+}
+
+.nav-text {
+  @apply w-0 overflow-hidden text-ellipsis whitespace-nowrap pl-0 text-sm opacity-0 transition-all duration-300;
+  /* transition-property: width, opacity, pl; */
+}
+
+aside:hover .nav-text {
+  @apply pl-4 opacity-100;
+  width: calc(100% - 4rem);
+}
+
+.router-link {
+  /* @apply hover:bg-muted hover:text-foreground text-muted-foreground flex w-full transform items-center rounded-lg px-3 py-2; */
+  @apply text-muted-foreground hover:bg-muted hover:text-foreground flex w-full items-center overflow-hidden rounded-lg py-2 pl-2;
+}
+
+.router-link-exact-active {
+  @apply bg-pri text-background hover:bg-pri hover:text-background;
 }
 
 .scrollbox::-webkit-scrollbar-thumb {
