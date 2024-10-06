@@ -6,6 +6,7 @@ import SideBar from '@/views/partials/SideBar.vue'
 import LoadingPage from '@/views/pages/LoadingPage.vue'
 import NotAvailableOnMobile from '@/views/pages/NotAvailableOnMobile.vue'
 import GlobalWarning from '@/views/partials/GlobalWarning.vue'
+import { useColorMode } from '@vueuse/core'
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -23,6 +24,7 @@ onMounted(() => {
   })
 })
 
+const colorMode = useColorMode()
 const isLoginPage = computed(() => router.currentRoute.value.name === 'Login')
 </script>
 
