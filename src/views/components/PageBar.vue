@@ -1,5 +1,5 @@
 <template>
-  <div class="flex w-full flex-col space-y-2 border-b bg-pri/5 px-4 pt-4">
+  <div class="flex w-full flex-col gap-3 space-y-2 border-b bg-background px-4 pt-4 dark:bg-pri/5">
     <div class="flex justify-between">
       <div class="flex flex-col">
         <p class="text-base font-medium">
