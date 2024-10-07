@@ -73,6 +73,6 @@
     font-family: 'Inter', sans-serif;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-pri/5 text-foreground dark:bg-background;
   }
 }
