@@ -108,7 +108,7 @@ const startCountDown = () => {
 <template>
   <aside
     v-if="isShowSideBar"
-    class="scrollbox flex h-screen w-14 flex-col overflow-y-hidden border-r px-2 pb-2 pt-6 transition-all duration-300 hover:w-72">
+    class="scrollbox flex h-screen w-14 flex-col overflow-y-hidden border-r bg-pri/5 px-2 pb-2 pt-6 transition-all duration-300 hover:w-72">
     <div class="flex w-full items-center justify-center">
       <RouterLink to="/" class="flex w-full items-center">
         <img :src="Logo" alt="logo" class="ml-1 w-7" />
