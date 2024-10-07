@@ -7,10 +7,11 @@ import TableMessage from '@/views/components/Table/TableMessage.vue'
 import Table from '@/views/components/Table/Table.vue'
 import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useToast } from 'vue-toastification'
 import ApplicationListRow from '@/views/partials/ApplicationListRow.vue'
 import ProjectListRow from '@/views/partials/ProjectListRow.vue'
+import { Icon } from '@iconify/vue'
 
 const router = useRouter()
 const toast = useToast()
@@ -102,88 +103,95 @@ const refreshData = () => {
 
 const applications = computed(() => applicationsResult.value?.applications ?? [])
 const applicationGroups = computed(() => applicationGroupsResult.value?.applicationGroups ?? [])
+
+const tabs = [
+  { name: 'Applications', path: '/applications' },
+  { name: 'Projects', path: '/applications' }
+]
+
+const currentTab = ref('Applications')
 </script>
 
 <template>
-  <section class="mx-auto w-full max-w-7xl">
-    <!-- Deploy Apps Page bar   -->
-    <PageBar>
-      <template v-slot:title>Deployed Services</template>
-      <template v-slot:subtitle>Manage your deployed services</template>
-      <template v-slot:buttons>
-        <FilledButton :click="deployNewApplication" type="primary">
-          <font-awesome-icon icon="fa-solid fa-hammer" class="mr-2" />
-          Deploy App
-        </FilledButton>
-        <FilledButton :click="installApplicationFromAppStore" type="primary">
-          <font-awesome-icon icon="fa-solid fa-store" class="mr-2" />
-          App Store
-        </FilledButton>
-        <FilledButton type="ghost" :click="refreshData">
-          <font-awesome-icon
-            icon="fa-solid fa-arrows-rotate"
-            :class="{
-              'animate-spin ': isApplicationsLoading || isApplicationGroupsLoading
-            }" />&nbsp;&nbsp; Refresh List
-        </FilledButton>
-      </template>
-    </PageBar>
+  <!-- Deploy Apps Page bar   -->
+  <PageBar :tabs="tabs" v-model="currentTab">
+    <template v-slot:title>Deployed Services</template>
+    <template v-slot:subtitle>Manage your deployed services</template>
+    <template v-slot:buttons>
+      <FilledButton :click="deployNewApplication" type="primary" class="h-8 w-10">
+        <Icon icon="lucide:plus" class="h-5 w-5 p-0" />
+      </FilledButton>
+      <FilledButton :click="installApplicationFromAppStore" type="primary" class="h-8 w-10">
+        <Icon icon="lucide:store" class="h-5 w-5 p-0" />
+      </FilledButton>
+      <FilledButton type="outline" :click="refreshData" class="h-8 w-10">
+        <Icon
+          icon="lucide:refresh-ccw"
+          :class="{
+            'animate-spin ': isApplicationsLoading || isApplicationGroupsLoading
+          }" />
+      </FilledButton>
+    </template>
+  </PageBar>
+  <section class="mx-auto w-full max-w-7xl p-4">
+    <template v-if="currentTab === 'Applications'">
+      <p class="mt-6 text-sm font-medium flex items-center">
+        <Icon icon="lucide:layout-grid" class="mr-2 w-5 h-5" />
+        <h1 class="text-lg font-medium">Deployed Applications</h1>
+      </p>
 
-    <p class="mt-6 text-sm font-medium">
-      <font-awesome-icon icon="fa-solid fa-hammer" class="me-1" />
-      Deployed Applications
-    </p>
+      <!-- Applications Table -->
+      <Table class="mt-4">
+        <template v-slot:header>
+          <TableHeader align="left">Application Name</TableHeader>
+          <TableHeader align="center">Health Status</TableHeader>
+          <TableHeader align="center">Replicas</TableHeader>
+          <TableHeader align="center">Deploy Status</TableHeader>
+          <TableHeader align="center">Last Deployment</TableHeader>
+          <TableHeader align="right">View Details</TableHeader>
+        </template>
+        <template v-slot:message>
+          <TableMessage v-if="applications.length === 0">
+            No deployed applications found.<br />
+            Click on the "Deploy App" button to deploy a new application.
+          </TableMessage>
+          <TableMessage v-if="isApplicationsLoading && applications.length === 0">
+            Loading deployed applications...
+          </TableMessage>
+        </template>
+        <template v-slot:body>
+          <ApplicationListRow v-for="application in applications" :key="application.id" :application="application" />
+        </template>
+      </Table>
+    </template>
+    <template v-else>
+      <!--  Deployed Projects Bar   -->
+      <p class="mt-6 text-sm font-medium flex items-center">
+        <Icon icon="ph:stack" class="mr-2 w-5 h-5" />
+        <h1 class="text-lg font-medium">Deployed Projects</h1>
+      </p>
 
-    <!-- Applications Table -->
-    <Table class="mt-2">
-      <template v-slot:header>
-        <TableHeader align="left">Application Name</TableHeader>
-        <TableHeader align="center">Health Status</TableHeader>
-        <TableHeader align="center">Replicas</TableHeader>
-        <TableHeader align="center">Deploy Status</TableHeader>
-        <TableHeader align="center">Last Deployment</TableHeader>
-        <TableHeader align="right">View Details</TableHeader>
-      </template>
-      <template v-slot:message>
-        <TableMessage v-if="applications.length === 0">
-          No deployed applications found.<br />
-          Click on the "Deploy App" button to deploy a new application.
-        </TableMessage>
-        <TableMessage v-if="isApplicationsLoading && applications.length === 0">
-          Loading deployed applications...
-        </TableMessage>
-      </template>
-      <template v-slot:body>
-        <ApplicationListRow v-for="application in applications" :key="application.id" :application="application" />
-      </template>
-    </Table>
-
-    <!--  Deployed Projects Bar   -->
-    <p class="mt-6 text-sm font-medium">
-      <font-awesome-icon icon="fa-solid fa-layer-group" class="me-1" />
-      Deployed Projects
-    </p>
-
-    <!-- Projects Table -->
-    <Table class="mt-2">
-      <template v-slot:header>
-        <TableHeader align="left">Project Name</TableHeader>
-        <TableHeader align="center">Health Status</TableHeader>
-        <TableHeader align="center">Total Services</TableHeader>
-        <TableHeader align="center">Healthy Services</TableHeader>
-        <TableHeader align="center">Unhealthy Services</TableHeader>
-        <TableHeader align="right">View Details</TableHeader>
-      </template>
-      <template v-slot:message>
-        <TableMessage v-if="applicationGroups.length === 0"> No projects found.</TableMessage>
-        <TableMessage v-if="isApplicationGroupsLoading && applicationGroups.length === 0">
-          Loading deployed projects...
-        </TableMessage>
-      </template>
-      <template v-slot:body>
-        <ProjectListRow v-for="group in applicationGroups" :key="group.id" :project="group" />
-      </template>
-    </Table>
+      <!-- Projects Table -->
+      <Table v-if="currentTab === 'Projects'" class="mt-4">
+        <template v-slot:header>
+          <TableHeader align="left">Project Name</TableHeader>
+          <TableHeader align="center">Health Status</TableHeader>
+          <TableHeader align="center">Total Services</TableHeader>
+          <TableHeader align="center">Healthy Services</TableHeader>
+          <TableHeader align="center">Unhealthy Services</TableHeader>
+          <TableHeader align="right">View Details</TableHeader>
+        </template>
+        <template v-slot:message>
+          <TableMessage v-if="applicationGroups.length === 0"> No projects found.</TableMessage>
+          <TableMessage v-if="isApplicationGroupsLoading && applicationGroups.length === 0">
+            Loading deployed projects...
+          </TableMessage>
+        </template>
+        <template v-slot:body>
+          <ProjectListRow v-for="group in applicationGroups" :key="group.id" :project="group" />
+        </template>
+      </Table>
+    </template>
   </section>
 </template>
 

@@ -3,6 +3,7 @@ import TableRow from '@/views/components/Table/TableRow.vue'
 import FilledButton from '@/views/components/FilledButton.vue'
 import { computed } from 'vue'
 import router from '@/router/index.js'
+import HealthIndicator from '../components/HealthIndicator.vue'
 
 const props = defineProps({
   project: {
@@ -48,30 +49,22 @@ const viewApplicationGroupDetails = () => {
 <template>
   <tr v-show="isVisible">
     <TableRow align="left">
-      <div class="flex items-center gap-2 text-sm font-medium text-gray-900">
+      <div class="flex items-center gap-2 text-sm font-medium">
         <img v-if="project.logo" :src="project.logo" class="h-4 w-4 rounded-sm" alt="logo" />
         {{ project.name }}
       </div>
     </TableRow>
     <TableRow align="center" flex>
-      <div v-if="overallHealthStatus === 'healthy'" class="flex flex-row items-center text-sm text-gray-700">
-        <font-awesome-icon icon="fa-solid fa-heart-circle-check" class="me-1 text-success-500" />
-        Healthy
-      </div>
-      <div v-else-if="overallHealthStatus === 'unhealthy'" class="flex flex-row items-center text-sm text-gray-700">
-        <font-awesome-icon icon="fa-solid fa-heart-circle-exclamation" class="me-1 text-danger-500" />
-        Unhealthy
-      </div>
-      <div v-else class="text-sm text-gray-700">----</div>
+      <HealthIndicator :status="overallHealthStatus" />
     </TableRow>
     <TableRow align="center">
-      <div class="text-sm text-gray-700">{{ project.applications.length }}&nbsp;Services</div>
+      <div class="text-sm">{{ project.applications.length }}&nbsp;Services</div>
     </TableRow>
     <TableRow align="center" flex>
-      <div class="text-sm text-success-600">{{ healthyServiceCount }}&nbsp;Healthy</div>
+      <div class="text-sm text-success-500">{{ healthyServiceCount }}&nbsp;Healthy</div>
     </TableRow>
     <TableRow align="center">
-      <div class="text-sm text-danger-600">{{ unhealthyServiceCount }}&nbsp;Unhealthy</div>
+      <div class="text-sm text-danger-500">{{ unhealthyServiceCount }}&nbsp;Unhealthy</div>
     </TableRow>
     <TableRow align="right" flex>
       <FilledButton :click="viewApplicationGroupDetails" slim type="primary">View Details</FilledButton>
