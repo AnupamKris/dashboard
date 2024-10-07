@@ -16,7 +16,7 @@ const props = defineProps({
     type: String,
     default: 'primary',
     validator(value) {
-      return ['primary', 'success', 'warning', 'danger', 'secondary', 'info', 'ghost'].includes(value)
+      return ['primary', 'success', 'warning', 'danger', 'secondary', 'info', 'ghost', 'outline'].includes(value)
     }
   },
   slim: {
@@ -37,15 +37,16 @@ const isDisabled = computed(() => {
 <template>
   <button
     :class="{
-      'bg-primary-600 hover:bg-primary-600/80 focus-visible:outline-primary-600': type === 'primary',
+      'bg-pri text-background hover:bg-pri/80': type === 'primary',
+      'border border-muted bg-transparent text-foreground hover:bg-zinc-200 hover:dark:bg-zinc-800': type === 'outline',
       'bg-secondary-600 hover:bg-secondary-600/80 focus-visible:outline-secondary-600': type === 'secondary',
       'bg-success-600 hover:bg-success-600/80 focus-visible:outline-success-600': type === 'success',
       'bg-warning-600 hover:bg-warning-600/80 focus-visible:outline-warning-600': type === 'warning',
       'bg-danger-600 hover:bg-danger-600/80 focus-visible:outline-danger-600': type === 'danger',
       'bg-info-600 hover:bg-info-600/80 focus-visible:outline-info-600': type === 'info',
-      'text-black-500 bg-secondary-100 font-medium hover:bg-secondary-200 focus-visible:outline-secondary-400':
-        type === 'ghost',
-      'font-semibold text-white': type !== 'ghost',
+      ' font-medium text-foreground hover:text-foreground/80 focus-visible:outline-secondary-400': type === 'ghost',
+      'text-background dark:text-foreground': type !== 'primary',
+      'font-semibold': type !== 'ghost',
       'cursor-not-allowed opacity-50': disabled,
       'hover:bg-[type]-600/80': !disabled,
       'cursor-progress': loading,
