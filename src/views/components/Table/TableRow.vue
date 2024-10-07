@@ -17,20 +17,19 @@ defineProps({
 </script>
 
 <template>
-  <td class="px-4 py-4">
+  <td class="px-4 py-4 text-foreground">
     <div
       :class="{
-      'text-left': align === 'left',
-      'text-center': align === 'center',
-      'text-right': align === 'right',
-      'justify-start': align === 'left',
-      'justify-center': align === 'center',
-      'justify-end': align === 'right',
-      'flex': flex
-    }"
+        'text-left': align === 'left',
+        'text-center': align === 'center',
+        'text-right': align === 'right',
+        'justify-start': align === 'left',
+        'justify-center': align === 'center',
+        'justify-end': align === 'right',
+        flex: flex
+      }"
       class="gap-2 whitespace-nowrap">
       <slot></slot>
     </div>
   </td>
-
 </template>
