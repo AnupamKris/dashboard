@@ -35,7 +35,7 @@ const isLoginPage = computed(() => router.currentRoute.value.name === 'Login')
     <div
       class="scrollbox flex max-h-[100vh] w-full flex-col items-center overflow-y-auto"
       :class="{
-        'p-4': !isLoginPage
+        'p-0': !isLoginPage
       }">
       <RouterView />
     </div>
