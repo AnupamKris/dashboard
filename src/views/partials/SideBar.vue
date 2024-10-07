@@ -115,12 +115,16 @@ const startCountDown = () => {
 
         <span class="nav-text w-fit pl-0 font-semibold"
           >Swiftwave
-          <p class="text-muted-foreground text-xs">v{{ swVersion }}</p>
+          <p class="text-xs text-muted-foreground">v{{ swVersion }}</p>
+        </span>
+        <span class="nav-text flex flex-col text-xs">
+          <span class="text-muted-foreground">Logout:</span>
+          <span>{{ authStore.sessionRelativeTimeoutStatus }}</span>
         </span>
       </RouterLink>
     </div>
-    <div class="mt-6 flex w-full flex-1 flex-col justify-between">
-      <nav class="flex w-full flex-col items-center justify-start">
+    <div class="mt-6 flex w-full flex-1 flex-col justify-between overflow-y-hidden">
+      <nav class="flex h-full w-full flex-col items-center justify-start overflow-hidden">
         <Separator class="w-2/3" />
         <RouterLink class="router-link" to="/deploy/app-store">
           <Icon icon="lucide:store" class="h-5 w-5" />
@@ -194,31 +198,32 @@ const startCountDown = () => {
           <Icon icon="lucide:users" class="h-5 w-5" />
           <span class="nav-text">Manage Users</span>
         </RouterLink>
-        <div
-          @click="systemRestart"
-          class="flex transform cursor-pointer items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700">
-          <font-awesome-icon icon="fa-solid fa-power-off" />
-          <span class="nav-text">System Restart</span>
-        </div>
 
-        <div
-          class="flex transform cursor-pointer items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-          @click="openChangePasswordModal">
-          <font-awesome-icon icon="fa-solid fa-key" />
-          <span class="nav-text">Change Password</span>
+        <Separator class="w-2/3" />
+
+        <div class="quick-settings mt-auto flex gap-2">
+          <div
+            class="has-popover flex transform cursor-pointer items-center rounded-full p-2 text-muted-foreground transition-colors duration-300 hover:bg-pri hover:text-pri-foreground"
+            @click="openChangePasswordModal">
+            <Icon icon="lucide:shield" class="h-5 w-5" />
+            <span class="popover top-[-110%] w-[120px] p-1 px-2 text-center text-xs">Change Password</span>
+          </div>
+          <div
+            class="has-popover flex transform cursor-pointer items-center rounded-full p-2 text-muted-foreground transition-colors duration-300 hover:bg-pri hover:text-red-500"
+            @click="logoutWithConfirmation">
+            <Icon icon="lucide:power" class="h-5 w-5" />
+            <span class="popover top-[-110%] p-1 px-2 text-xs">Logout</span>
+          </div>
+          <div
+            @click="systemRestart"
+            class="has-popover flex transform cursor-pointer items-center rounded-full p-2 text-muted-foreground transition-colors duration-300 hover:bg-pri hover:text-yellow-500">
+            <Icon icon="lucide:refresh-ccw" class="h-5 w-5" />
+            <span class="popover top-[-110%] w-[100px] p-1 px-2 text-center text-xs">System Restart</span>
+          </div>
         </div>
-        <a
-          class="flex transform cursor-pointer items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-          @click="logoutWithConfirmation">
-          <font-awesome-icon icon="fa-solid fa-right-from-bracket" />
-          <span class="nav-text">Logout</span>
-        </a>
       </nav>
     </div>
-    <div class="flex justify-between px-2 text-sm font-medium">
-      <span>Auto-logout {{ authStore.sessionRelativeTimeoutStatus }}</span>
-      <span> v{{ swVersion }}</span>
-    </div>
+
     <ChangePasswordModal :is-modal-open="isChangePasswordModalOpen" :close-modal="closeChangePasswordModal" />
     <Teleport to="body">
       <!-- Modal for restart system -->
@@ -243,7 +248,7 @@ const startCountDown = () => {
 }
 
 .nav-text {
-  @apply w-0 overflow-hidden text-ellipsis whitespace-nowrap pl-0 text-sm opacity-0 transition-all duration-300;
+  @apply w-0 overflow-hidden text-ellipsis whitespace-nowrap pl-0 text-xs opacity-0 transition-all duration-300;
   /* transition-property: width, opacity, pl; */
 }
 
@@ -254,11 +259,11 @@ aside:hover .nav-text {
 
 .router-link {
   /* @apply hover:bg-muted hover:text-foreground text-muted-foreground flex w-full transform items-center rounded-lg px-3 py-2; */
-  @apply text-muted-foreground hover:bg-muted hover:text-foreground flex w-full items-center overflow-hidden rounded-lg py-2 pl-2;
+  @apply flex w-full items-center overflow-hidden rounded-lg py-2 pl-2 text-muted-foreground hover:bg-muted hover:text-foreground;
 }
 
 .router-link-exact-active {
-  @apply bg-pri text-background hover:bg-pri hover:text-background;
+  @apply bg-pri font-bold text-background hover:bg-pri hover:text-background;
 }
 
 .scrollbox::-webkit-scrollbar-thumb {
