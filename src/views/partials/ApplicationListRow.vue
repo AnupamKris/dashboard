@@ -90,7 +90,7 @@ const viewApplicationDetails = () => {
       <span class="text-sm"> {{ createdAtFormatted }} </span>
     </TableRow>
     <TableRow align="right" flex>
-      <FilledButton :click="viewApplicationDetails" slim type="primary">View Details</FilledButton>
+      <FilledButton :click="viewApplicationDetails" slim type="subtle">View Details</FilledButton>
     </TableRow>
   </tr>
 </template>
