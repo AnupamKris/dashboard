@@ -203,22 +203,19 @@ const startCountDown = () => {
 
         <div class="quick-settings mt-auto flex gap-2">
           <div
-            class="has-popover flex transform cursor-pointer items-center rounded-full p-2 text-muted-foreground transition-colors duration-300 hover:bg-pri hover:text-pri-foreground"
+            class="flex transform cursor-pointer items-center rounded-full p-2 text-muted-foreground transition-colors duration-300 hover:bg-pri hover:text-pri-foreground"
             @click="openChangePasswordModal">
             <Icon icon="lucide:shield" class="h-5 w-5" />
-            <span class="popover top-[-110%] w-[120px] p-1 px-2 text-center text-xs">Change Password</span>
           </div>
           <div
-            class="has-popover flex transform cursor-pointer items-center rounded-full p-2 text-muted-foreground transition-colors duration-300 hover:bg-pri hover:text-red-500"
+            class="flex transform cursor-pointer items-center rounded-full p-2 text-muted-foreground transition-colors duration-300 hover:bg-pri hover:text-red-500"
             @click="logoutWithConfirmation">
             <Icon icon="lucide:power" class="h-5 w-5" />
-            <span class="popover top-[-110%] p-1 px-2 text-xs">Logout</span>
           </div>
           <div
-            @click="systemRestart"
-            class="has-popover flex transform cursor-pointer items-center rounded-full p-2 text-muted-foreground transition-colors duration-300 hover:bg-pri hover:text-yellow-500">
+            class="flex transform cursor-pointer items-center rounded-full p-2 text-muted-foreground transition-colors duration-300 hover:bg-pri hover:text-yellow-500"
+            @click="systemRestart">
             <Icon icon="lucide:refresh-ccw" class="h-5 w-5" />
-            <span class="popover top-[-110%] w-[100px] p-1 px-2 text-center text-xs">System Restart</span>
           </div>
         </div>
       </nav>
@@ -229,12 +226,14 @@ const startCountDown = () => {
       <!-- Modal for restart system -->
       <ModalDialog :is-open="isSystemRestartModalOpen" non-cancelable>
         <template v-slot:header>
-          <span>🔌 Restarting System</span>
+          <span class="flex items-center gap-2"
+            ><Icon icon="lucide:refresh-cw" class="h-5 w-5 animate-spin" /> Restarting System
+          </span>
         </template>
         <template v-slot:body>
           <p class="mb-2">System restart has been requested.</p>
           <p>
-            Redirecting to Maintenance Page in <b>{{ timeCount }}</b> seconds
+            Redirecting to Maintenance Page in <b class="text-foreground">{{ timeCount }}</b> seconds
           </p>
         </template>
       </ModalDialog>
