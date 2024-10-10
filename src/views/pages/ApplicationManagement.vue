@@ -104,12 +104,12 @@ const refreshData = () => {
 const applications = computed(() => applicationsResult.value?.applications ?? [])
 const applicationGroups = computed(() => applicationGroupsResult.value?.applicationGroups ?? [])
 
-const tabs = [
-  { name: 'Applications', path: '/applications' },
-  { name: 'Projects', path: '/applications' }
-]
+const tabs = computed(() => [
+  { name: 'Applications', path: 'applications', count: applications.value.length },
+  { name: 'Projects', path: 'projects', count: applicationGroups.value.length }
+])
 
-const currentTab = ref('Applications')
+const currentTab = ref('applications')
 </script>
 
 <template>
@@ -134,11 +134,11 @@ const currentTab = ref('Applications')
     </template>
   </PageBar>
   <section class="mx-auto w-full max-w-7xl p-4">
-    <template v-if="currentTab === 'Applications'">
-      <p class="mt-6 text-sm font-medium flex items-center">
-        <Icon icon="lucide:layout-grid" class="mr-2 w-5 h-5" />
+    <template v-if="currentTab === 'applications'">
+      <div class="mt-6 flex items-center text-sm font-medium">
+        <Icon icon="lucide:layout-grid" class="mr-2 h-5 w-5" />
         <h1 class="text-lg font-medium">Deployed Applications</h1>
-      </p>
+      </div>
 
       <!-- Applications Table -->
       <Table class="mt-4">
@@ -166,13 +166,13 @@ const currentTab = ref('Applications')
     </template>
     <template v-else>
       <!--  Deployed Projects Bar   -->
-      <p class="mt-6 text-sm font-medium flex items-center">
-        <Icon icon="ph:stack" class="mr-2 w-5 h-5" />
+      <div class="mt-6 flex items-center text-sm font-medium">
+        <Icon icon="ph:stack" class="mr-2 h-5 w-5" />
         <h1 class="text-lg font-medium">Deployed Projects</h1>
-      </p>
+      </div>
 
       <!-- Projects Table -->
-      <Table v-if="currentTab === 'Projects'" class="mt-4">
+      <Table v-if="currentTab === 'projects'" class="mt-4">
         <template v-slot:header>
           <TableHeader align="left">Project Name</TableHeader>
           <TableHeader align="center">Health Status</TableHeader>
