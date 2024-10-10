@@ -18,12 +18,20 @@ import { v4 as uuidv4 } from 'uuid'
 import PersistentVolumeBindingEditor from '@/views/partials/DeployApplication/PersistentVolumeBindingEditor.vue'
 import ConfigMountsEditor from '@/views/partials/DeployApplication/ConfigMountsEditor.vue'
 import FilledButton from '@/views/components/FilledButton.vue'
+import { Icon } from '@iconify/vue'
+import PageBar from '../components/PageBar.vue'
 
 const toast = useToast()
 
 // Get the application ID from the URL
 const router = useRouter()
 const applicationGroupId = router.currentRoute.value.params.id
+const tabs = [
+  { name: 'Deployed Apps', path: 'deployed-apps' },
+  { name: 'Persistent Volumes', path: 'persistent-volumes' },
+  { name: 'Environment Variables', path: 'environment-variables' },
+  { name: 'Static App Config', path: 'static-app-config' }
+]
 
 // Fetch the application details
 const {
@@ -446,6 +454,83 @@ const applyChanges = async () => {
 
 <template>
   <!-- Main -->
+  <PageBar :tabs="tabs" v-model="pageName">
+    <template v-slot:title
+      ><div class="flex items-center gap-2 font-medium">
+        <img
+          v-if="applicationGroupDetails.logo"
+          :src="applicationGroupDetails.logo"
+          class="h-4 w-4 rounded-sm"
+          alt="logo" />
+        {{ applicationGroupDetails.name }}
+      </div></template
+    >
+    <template v-slot:subtitle
+      ><div class="flex gap-2">
+        <div class="flex items-center gap-2">
+          <div
+            v-if="ingressRules.length > 0"
+            class="deployment-head max-w-[40vw]"
+            :class="{
+              '!pr-0.5': ingressRules.length > 0
+            }">
+            <Icon icon="lucide:globe" class="inline" />
+            <span v-for="(ingressRule, index) in ingressRules" :key="index">
+              <a
+                :href="
+                  ingressRule.protocol +
+                  '://' +
+                  ((ingressRule.domain?.name || null) ?? 'proxy_server_ip') +
+                  ':' +
+                  ingressRule.port.toString()
+                "
+                target="_blank"
+                class="has-popover rounded-full bg-primary-500 px-2 py-1 text-secondary-100">
+                <Icon icon="lucide:link" class="mr-0.5 inline text-xs" />
+                Link {{ index + 1 }}
+                <div class="popover">
+                  {{
+                    ingressRule.protocol +
+                    '://' +
+                    ((ingressRule.domain?.name || null) ?? 'proxy_server_ip') +
+                    ':' +
+                    ingressRule.port.toString()
+                  }}
+                </div>
+              </a>
+            </span>
+          </div>
+          <div v-else class="has-popover flex cursor-pointer gap-2">
+            <div class="deployment-head">
+              <font-awesome-icon icon="fa-solid fa-globe " />
+              <p class="text-warning-600">Not Exposed</p>
+            </div>
+            <div class="popover w-60">
+              No Ingress Rules available. Please open the <b>application details</b> page and create ingress rule to
+              expose your application to the internet.
+            </div>
+          </div>
+        </div>
+      </div></template
+    >
+    <template v-slot:buttons>
+      <!-- <div class="flex flex-row items-center gap-5 px-3 text-center"> -->
+      <!-- <div class="flex flex-row items-center text-sm"> -->
+      <!-- <Icon icon="lucide:blocks" class="me-1 text-info-500" /> -->
+      <!-- {{ totalServiceCount }} -->
+      {{ healthyServiceCount }}
+      <!-- </div> -->
+      <!-- <div class="flex flex-row items-center text-sm">
+        <Icon icon="lucide:heart-pulse" class="me-1 text-success-500" />
+        {{ healthyServiceCount }}&nbsp;Healthy
+      </div>
+      <div class="flex flex-row items-center text-sm">
+        <Icon icon="lucide:heart-crack" class="me-1 text-danger-500" />
+        {{ unhealthyServiceCount }}&nbsp;Unhealthy
+      </div> -->
+      <!-- </div> -->
+    </template>
+  </PageBar>
   <div v-if="applicationGroupDetailsLoading">
     <p>Loading...</p>
   </div>
@@ -460,34 +545,22 @@ const applyChanges = async () => {
       ref="rebuildApplicationsModal"
       :application-ids="applicationIds"
       :on-done="refetchGroupApplicationDetails" />
+
     <!--  First line  -->
     <div class="flex w-full flex-row items-center justify-between">
-      <!--   App name     -->
-      <div class="flex items-center gap-2">
-        <div class="flex flex-row items-center gap-2 overflow-hidden">
-          <div class="flex items-center justify-center gap-2 font-medium">
-            <img
-              v-if="applicationGroupDetails.logo"
-              :src="applicationGroupDetails.logo"
-              class="h-4 w-4 rounded-sm"
-              alt="logo" />
-            {{ applicationGroupDetails.name }}
-          </div>
-        </div>
-      </div>
       <!--     Status   -->
-      <div class="text-center font-medium text-gray-800">
+      <div class="text-center font-medium">
         <div class="flex flex-row items-center gap-5 px-3 text-center">
-          <div class="flex flex-row items-center text-sm text-gray-700">
-            <font-awesome-icon icon="fa-solid fa-boxes-stacked" class="me-1 text-info-500" />
+          <div class="flex flex-row items-center text-sm">
+            <Icon icon="lucide:blocks" class="me-1 text-info-500" />
             {{ totalServiceCount }}&nbsp;Services
           </div>
-          <div class="flex flex-row items-center text-sm text-gray-700">
-            <font-awesome-icon icon="fa-solid fa-heart-circle-check" class="me-1 text-success-500" />
+          <div class="flex flex-row items-center text-sm">
+            <Icon icon="lucide:heart-pulse" class="me-1 text-success-500" />
             {{ healthyServiceCount }}&nbsp;Healthy
           </div>
-          <div class="flex flex-row items-center text-sm text-gray-700">
-            <font-awesome-icon icon="fa-solid fa-heart-circle-exclamation" class="me-1 text-danger-500" />
+          <div class="flex flex-row items-center text-sm">
+            <Icon icon="lucide:heart-crack" class="me-1 text-danger-500" />
             {{ unhealthyServiceCount }}&nbsp;Unhealthy
           </div>
         </div>
@@ -563,7 +636,7 @@ const applyChanges = async () => {
     <!--  main section  -->
     <div class="mt-8 flex w-full flex-row gap-5">
       <!--   navbar   -->
-      <div class="navbar">
+      <!-- <div class="navbar">
         <div
           class="nav-element"
           :class="{
@@ -590,7 +663,7 @@ const applyChanges = async () => {
           @click="pageName = 'static-app-config'">
           Static App Config
         </div>
-      </div>
+      </div> -->
 
       <div class="w-full">
         <!--    Deployed Apps  -->
