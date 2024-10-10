@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import FilledButton from '@/views/components/FilledButton.vue'
 import { useToast } from 'vue-toastification'
 import { useRouter } from 'vue-router'
+import { Icon } from '@iconify/vue'
 
 const props = defineProps({
   applicationIds: {
@@ -159,18 +160,15 @@ const deleteApplications = async () => {
       <span>Delete Application<span v-if="props.applicationIds.length > 1">s</span></span>
     </template>
     <template v-slot:body>
-      <div class="mb-2 mt-4 w-full rounded-md border border-warning-200 bg-warning-100 p-2 text-sm">
+      <div class="mb-2 mt-4 w-full rounded-md border border-warning-200 bg-warning-100 p-2 text-sm text-warning-800">
         Don't close this window until all the app<span v-if="props.applicationIds.length > 1">s</span> are deleted.
       </div>
       <p v-if="isLoadingApplicationDetailsFirstTime">Loading application details...</p>
       <div v-else class="mt-2">
         <div v-for="app in applicationDetails" :key="app.id" class="flex w-full flex-row items-center gap-2">
-          <font-awesome-icon
-            v-if="isDeleting"
-            icon="fa-solid fa-circle-notch"
-            class="animate-spin text-base text-warning-500" />
-          <font-awesome-icon v-else icon="fa-regular fa-circle" class="text-base text-warning-500" />
-          <span class="text-secondary-800"
+          <Icon v-if="isDeleting" icon="lucide:loader-circle" class="animate-spin text-base text-warning-500" />
+          <Icon v-else icon="lucide:circle" class="text-base text-warning-500" />
+          <span class=""
             >{{ app.name }}&nbsp;<span v-if="(app?.ingressRules ?? []).length > 0"
               >({{ (app?.ingressRules ?? []).length }} Ingress Rules)</span
             ></span
