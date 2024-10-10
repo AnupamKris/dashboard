@@ -6,6 +6,7 @@ import gql from 'graphql-tag'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import FilledButton from '@/views/components/FilledButton.vue'
 import { useToast } from 'vue-toastification'
+import { Icon } from '@iconify/vue'
 
 const props = defineProps({
   applicationIds: {
@@ -123,12 +124,9 @@ const restartApplications = async () => {
       <p v-if="isLoadingApplicationDetailsFirstTime">Loading application details...</p>
       <div v-else class="mt-2">
         <div v-for="app in applicationDetails" :key="app.id" class="flex w-full flex-row items-center gap-2">
-          <font-awesome-icon
-            v-if="isRestarting"
-            icon="fa-solid fa-circle-notch"
-            class="animate-spin text-base text-warning-500" />
-          <font-awesome-icon v-else icon="fa-regular fa-circle" class="text-base text-warning-500" />
-          <span class="text-secondary-800">{{ app.name }}</span>
+          <Icon v-if="isRestarting" icon="lucide:loader-circle" class="animate-spin text-base text-warning-500" />
+          <Icon v-else icon="lucide:circle" class="text-base text-warning-500" />
+          <span class="">{{ app.name }}</span>
         </div>
       </div>
     </template>
