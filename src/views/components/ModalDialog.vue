@@ -1,5 +1,7 @@
 <script setup>
 import { Dialog, DialogDescription, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import FilledButton from './FilledButton.vue'
+import { Icon } from '@iconify/vue'
 
 const props = defineProps({
   isOpen: {
@@ -68,28 +70,22 @@ const closeModalWithValidation = () => {
               <DialogTitle as="h3" class="border-b px-4 pb-3 text-lg font-semibold leading-6">
                 <slot name="header"></slot>
                 <!-- Close button -->
-                <button
+                <FilledButton
                   v-show="!nonCancelable"
-                  class="absolute right-4 top-4 rounded-md border-2 p-1 text-gray-400 transition-shadow duration-200 hover:text-gray-500 hover:ring-2 hover:ring-gray-400"
-                  type="button"
+                  class="absolute right-2 top-2"
+                  slim
+                  type="outline"
                   @click="closeModalWithValidation">
                   <span class="sr-only">Close</span>
-                  <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      d="M6 18L18 6M6 6l12 12"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2" />
-                  </svg>
-                </button>
+                  <Icon icon="lucide:x" class="h-5 w-5" />
+                </FilledButton>
               </DialogTitle>
 
               <DialogDescription class="mt-2 px-4 text-sm text-muted-foreground">
                 <slot name="body"></slot>
               </DialogDescription>
 
-              <div class="mt-4 flex flex-row justify-end gap-2">
+              <div class="mt-4 flex flex-row justify-end gap-2 px-4">
                 <slot name="footer"></slot>
               </div>
             </DialogPanel>
