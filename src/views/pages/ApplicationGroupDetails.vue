@@ -517,16 +517,15 @@ const applyChanges = async () => {
       <div class="flex flex-row items-center gap-5 px-3 text-center">
         <div class="flex flex-row items-center text-sm">
           <Icon icon="lucide:blocks" class="me-1 text-info-500" />
-          <!-- {{ totalServiceCount }} -->
-          {{ 2 }}
+          {{ totalServiceCount }}&nbsp;Services
         </div>
         <div class="flex flex-row items-center text-sm">
           <Icon icon="lucide:heart-pulse" class="me-1 text-success-500" />
-          <!-- {{ healthyServiceCount }}&nbsp;Healthy -->
+          {{ healthyServiceCount }}&nbsp;Healthy
         </div>
         <div class="flex flex-row items-center text-sm">
           <Icon icon="lucide:heart-crack" class="me-1 text-danger-500" />
-          <!-- {{ unhealthyServiceCount }}&nbsp;Unhealthy -->
+          {{ unhealthyServiceCount }}&nbsp;Unhealthy
         </div>
       </div>
     </template>
@@ -534,7 +533,7 @@ const applyChanges = async () => {
   <div v-if="applicationGroupDetailsLoading">
     <p>Loading...</p>
   </div>
-  <section v-else class="mx-auto w-full max-w-7xl">
+  <section v-else class="mx-auto w-full max-w-7xl px-4">
     <!--  Modals  -->
     <DeleteApplicationsModal ref="deleteApplicationsModal" :application-ids="applicationIds" />
     <RestartApplicationsModal
