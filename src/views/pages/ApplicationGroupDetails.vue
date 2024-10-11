@@ -514,21 +514,21 @@ const applyChanges = async () => {
       </div></template
     >
     <template v-slot:buttons>
-      <!-- <div class="flex flex-row items-center gap-5 px-3 text-center"> -->
-      <!-- <div class="flex flex-row items-center text-sm"> -->
-      <!-- <Icon icon="lucide:blocks" class="me-1 text-info-500" /> -->
-      <!-- {{ totalServiceCount }} -->
-      {{ healthyServiceCount }}
-      <!-- </div> -->
-      <!-- <div class="flex flex-row items-center text-sm">
-        <Icon icon="lucide:heart-pulse" class="me-1 text-success-500" />
-        {{ healthyServiceCount }}&nbsp;Healthy
+      <div class="flex flex-row items-center gap-5 px-3 text-center">
+        <div class="flex flex-row items-center text-sm">
+          <Icon icon="lucide:blocks" class="me-1 text-info-500" />
+          <!-- {{ totalServiceCount }} -->
+          {{ 2 }}
+        </div>
+        <div class="flex flex-row items-center text-sm">
+          <Icon icon="lucide:heart-pulse" class="me-1 text-success-500" />
+          <!-- {{ healthyServiceCount }}&nbsp;Healthy -->
+        </div>
+        <div class="flex flex-row items-center text-sm">
+          <Icon icon="lucide:heart-crack" class="me-1 text-danger-500" />
+          <!-- {{ unhealthyServiceCount }}&nbsp;Unhealthy -->
+        </div>
       </div>
-      <div class="flex flex-row items-center text-sm">
-        <Icon icon="lucide:heart-crack" class="me-1 text-danger-500" />
-        {{ unhealthyServiceCount }}&nbsp;Unhealthy
-      </div> -->
-      <!-- </div> -->
     </template>
   </PageBar>
   <div v-if="applicationGroupDetailsLoading">
