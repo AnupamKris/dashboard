@@ -9,6 +9,7 @@ import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { useToast } from 'vue-toastification'
 import CreatePersistentVolumeModal from '@/views/partials/CreatePersistentVolumeModal.vue'
+import { Icon } from '@iconify/vue'
 
 const toast = useToast()
 const props = defineProps({
@@ -79,14 +80,16 @@ const openPersistentVolumeModal = computed(() => createPersistentVolumeModalRef.
       <TableHeader align="right" class="w-[80px]">Delete</TableHeader>
     </template>
     <template v-slot:message>
-      <TableMessage v-if="persistentVolumeBindingKeys.length === 0" class="flex flex-col items-center">
+      <TableMessage
+        v-if="persistentVolumeBindingKeys.length === 0"
+        class="flex flex-col items-center text-muted-foreground">
         No Persistent Volume Bindings found.<br />
         If your application requires persistent volume bindings, you can add them here.<br />
         <FilledButton class="mt-3 max-w-fit" @click="addPersistentVolumeBinding"
           >Add Persistent Volume Binding
         </FilledButton>
       </TableMessage>
-      <div v-else class="flex flex-col gap-2 px-6 py-2 text-sm text-gray-600">
+      <div v-else class="flex flex-col gap-2 px-6 py-2 text-sm text-muted-foreground">
         <p class="m-0 inline-flex items-center p-0">
           <FilledButton slim @click="addPersistentVolumeBinding" class="mr-2"
             >Add Persistent Volume Binding
@@ -104,7 +107,7 @@ const openPersistentVolumeModal = computed(() => createPersistentVolumeModalRef.
         <TableRow>
           <select
             :key="`credential-${key}`"
-            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+            class="block w-full rounded-md border-border bg-background shadow-sm focus:border-pri focus:ring-accent sm:text-sm"
             @change="(event) => onPersistentVolumeChange(key, event.target.value)">
             <option selected value="0">Select Persistent Volume</option>
             <option
@@ -119,7 +122,7 @@ const openPersistentVolumeModal = computed(() => createPersistentVolumeModalRef.
         <TableRow>
           <input
             :key="`value-${key}`"
-            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+            class="block w-full rounded-md border-border bg-background shadow-sm focus:border-pri focus:ring-accent sm:text-sm"
             placeholder="Mounted Path"
             type="text"
             v-bind:value="persistentVolumeBindingsMap[key]?.mountingPath ?? ''"
@@ -131,7 +134,7 @@ const openPersistentVolumeModal = computed(() => createPersistentVolumeModalRef.
             :click="() => deletePersistentVolumeBinding(key)"
             class="w-full"
             type="danger">
-            <font-awesome-icon class="mr-2" icon="fa-solid fa-trash" />
+            <Icon icon="lucide:trash" class="mr-2 h-4 w-4" />
             Delete Volume
           </FilledButton>
         </TableRow>
