@@ -17,7 +17,7 @@
       <div
         v-for="tab in tabs"
         :key="tab.name"
-        class="flex items-center gap-2 py-3"
+        class="flex cursor-pointer items-center gap-2 py-3"
         :class="{ active: currentTab === tab.path }"
         @click="currentTab = tab.path">
         <p>{{ tab.name }}</p>
