@@ -62,7 +62,7 @@ defineExpose({
       <form @submit.prevent="">
         <!--  Name Field   -->
         <div class="mt-4">
-          <label class="block text-sm font-medium text-gray-700"> Config Mount Path </label>
+          <label class="block text-sm font-medium text-muted-foreground"> Config Mount Path </label>
           <div class="mt-1">
             <input
               v-model="newConfigMountDetails.mountingPath"
@@ -76,7 +76,7 @@ defineExpose({
         <div class="mt-2 flex w-full flex-row gap-2">
           <!--   File UID     -->
           <div class="w-1/2">
-            <label class="block text-sm font-medium text-gray-700">File UID</label>
+            <label class="block text-sm font-medium text-muted-foreground">File UID</label>
             <div class="mt-1">
               <input
                 v-model="newConfigMountDetails.uid"
@@ -88,7 +88,7 @@ defineExpose({
           </div>
           <!--   File Gid     -->
           <div class="w-1/2">
-            <label class="block text-sm font-medium text-gray-700">File GID</label>
+            <label class="block text-sm font-medium text-muted-foreground">File GID</label>
             <div class="mt-1">
               <input
                 v-model="newConfigMountDetails.gid"
@@ -101,7 +101,7 @@ defineExpose({
         </div>
 
         <div class="mt-2 w-full">
-          <label class="block text-sm font-medium text-gray-700">Config Content</label>
+          <label class="block text-sm font-medium text-muted-foreground">Config Content</label>
           <div class="mt-1">
             <textarea
               rows="20"

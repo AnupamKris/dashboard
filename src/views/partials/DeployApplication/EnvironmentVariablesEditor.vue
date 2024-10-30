@@ -45,20 +45,23 @@ const environmentVariablesKeys = toRef(props, 'environmentVariablesKeys')
       <TableHeader align="right" class="w-[80px]">Delete</TableHeader>
     </template>
     <template v-slot:message>
-      <TableMessage v-if="environmentVariablesKeys.length === 0" class="flex flex-col items-center">
+      <TableMessage
+        v-if="environmentVariablesKeys.length === 0"
+        class="flex flex-col items-center text-muted-foreground">
         No Environment Variables found.<br />
         If your application requires environment variables, you can add them here.<br />
         <FilledButton class="mt-3 max-w-fit" @click="addEnvironmentVariable">Add Environment Variable</FilledButton>
       </TableMessage>
-      <div v-else class="flex flex-row gap-3 px-4 pb-4 pt-2 text-sm text-gray-600">
+      <div v-else class="flex flex-row gap-3 px-4 pb-4 pt-2 text-sm text-muted-foreground">
         <FilledButton slim @click="addEnvironmentVariable">Add Environment Variable</FilledButton>
         Want to add more environment variables ?
       </div>
     </template>
     <template v-slot:body>
       <EnvironmentVariableRow
-        v-for="key in environmentVariablesKeys"
+        v-for="(key, index) in environmentVariablesKeys"
         :key="key"
+        :index="index"
         :variable-key="key"
         :variable-name="environmentVariablesMap[key]?.name"
         :delete-variable="deleteEnvironmentVariable"

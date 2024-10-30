@@ -470,7 +470,7 @@ const applyChanges = async () => {
         <div class="flex items-center gap-2">
           <div
             v-if="ingressRules.length > 0"
-            class="deployment-head max-w-[40vw]"
+            class="deployment-head mt-3 max-w-[40vw]"
             :class="{
               '!pr-0.5': ingressRules.length > 0
             }">
@@ -485,7 +485,7 @@ const applyChanges = async () => {
                   ingressRule.port.toString()
                 "
                 target="_blank"
-                class="has-popover rounded-full bg-primary-500 px-2 py-1 text-secondary-100">
+                class="has-popover rounded-md bg-pri px-2 py-1 text-pri-foreground">
                 <Icon icon="lucide:link" class="mr-0.5 inline text-xs" />
                 Link {{ index + 1 }}
                 <div class="popover">
@@ -502,7 +502,7 @@ const applyChanges = async () => {
           </div>
           <div v-else class="has-popover flex cursor-pointer gap-2">
             <div class="deployment-head">
-              <font-awesome-icon icon="fa-solid fa-globe " />
+              <Icon icon="lucide:globe" class="inline" />
               <p class="text-warning-600">Not Exposed</p>
             </div>
             <div class="popover w-60">
@@ -514,18 +514,22 @@ const applyChanges = async () => {
       </div></template
     >
     <template v-slot:buttons>
-      <div class="flex flex-row items-center gap-5 px-3 text-center">
-        <div class="flex flex-row items-center text-sm">
-          <Icon icon="lucide:blocks" class="me-1 text-info-500" />
-          {{ totalServiceCount }}&nbsp;Services
-        </div>
-        <div class="flex flex-row items-center text-sm">
-          <Icon icon="lucide:heart-pulse" class="me-1 text-success-500" />
-          {{ healthyServiceCount }}&nbsp;Healthy
-        </div>
-        <div class="flex flex-row items-center text-sm">
-          <Icon icon="lucide:heart-crack" class="me-1 text-danger-500" />
-          {{ unhealthyServiceCount }}&nbsp;Unhealthy
+      <div class="flex flex-col">
+        <div class="flex gap-2">
+          <FilledButton type="primary" @click="rebuildApplications">
+            <Icon icon="tabler:hammer" class="mr-1 h-5 w-5" />
+            Rebuild & Deploy
+          </FilledButton>
+
+          <FilledButton type="subtle" @click="restartApplications">
+            <Icon icon="lucide:rotate-cw" class="mr-1 h-4 w-4" />
+            Restart All
+          </FilledButton>
+
+          <FilledButton type="danger" @click="deleteApplications">
+            <Icon icon="lucide:trash" class="mr-1 h-4 w-4" />
+            Delete All
+          </FilledButton>
         </div>
       </div>
     </template>
@@ -544,93 +548,24 @@ const applyChanges = async () => {
       ref="rebuildApplicationsModal"
       :application-ids="applicationIds"
       :on-done="refetchGroupApplicationDetails" />
-
-    <!--  First line  -->
-    <div class="flex w-full flex-row items-center justify-between">
-      <!--     Status   -->
-      <div class="text-center font-medium">
-        <div class="flex flex-row items-center gap-5 px-3 text-center">
-          <div class="flex flex-row items-center text-sm">
-            <Icon icon="lucide:blocks" class="me-1 text-info-500" />
-            {{ totalServiceCount }}&nbsp;Services
-          </div>
-          <div class="flex flex-row items-center text-sm">
-            <Icon icon="lucide:heart-pulse" class="me-1 text-success-500" />
-            {{ healthyServiceCount }}&nbsp;Healthy
-          </div>
-          <div class="flex flex-row items-center text-sm">
-            <Icon icon="lucide:heart-crack" class="me-1 text-danger-500" />
-            {{ unhealthyServiceCount }}&nbsp;Unhealthy
-          </div>
-        </div>
+    <div class="flex flex-row items-center gap-5 px-3 text-center">
+      <div class="flex flex-row items-center text-sm">
+        <Icon icon="lucide:blocks" class="me-1 text-info-500" />
+        {{ totalServiceCount }}&nbsp;Services
+      </div>
+      <div class="flex flex-row items-center text-sm">
+        <Icon icon="lucide:heart-pulse" class="me-1 text-success-500" />
+        {{ healthyServiceCount }}&nbsp;Healthy
+      </div>
+      <div class="flex flex-row items-center text-sm">
+        <Icon icon="lucide:heart-crack" class="me-1 text-danger-500" />
+        {{ unhealthyServiceCount }}&nbsp;Unhealthy
       </div>
     </div>
     <!--  Second line  -->
     <div class="mt-3.5 flex w-full flex-row items-center justify-between">
-      <div class="flex gap-2">
-        <div class="flex items-center gap-2 text-gray-800">
-          <div
-            v-if="ingressRules.length > 0"
-            class="deployment-head max-w-[40vw]"
-            :class="{
-              '!pr-0.5': ingressRules.length > 0
-            }">
-            <font-awesome-icon icon="fa-solid fa-globe" />
-            <span v-for="(ingressRule, index) in ingressRules" :key="index">
-              <a
-                :href="
-                  ingressRule.protocol +
-                  '://' +
-                  ((ingressRule.domain?.name || null) ?? 'proxy_server_ip') +
-                  ':' +
-                  ingressRule.port.toString()
-                "
-                target="_blank"
-                class="has-popover rounded-full bg-primary-500 px-2 py-1 text-secondary-100">
-                <font-awesome-icon icon="fa-solid fa-link" class="mr-0.5 text-xs" />
-                Link {{ index + 1 }}
-                <div class="popover">
-                  {{
-                    ingressRule.protocol +
-                    '://' +
-                    ((ingressRule.domain?.name || null) ?? 'proxy_server_ip') +
-                    ':' +
-                    ingressRule.port.toString()
-                  }}
-                </div>
-              </a>
-            </span>
-          </div>
-          <div v-else class="has-popover flex cursor-pointer gap-2">
-            <div class="deployment-head">
-              <font-awesome-icon icon="fa-solid fa-globe" />
-              <p class="text-warning-600">Not Exposed</p>
-            </div>
-            <div class="popover w-60">
-              No Ingress Rules available. Please open the <b>application details</b> page and create ingress rule to
-              expose your application to the internet.
-            </div>
-          </div>
-        </div>
-      </div>
+      <div class="flex gap-2"></div>
       <!--    Quick Actions    -->
-      <div class="quick-actions">
-        <div class="divider"></div>
-        <div class="button" @click="rebuildApplications">
-          <font-awesome-icon icon="fa-solid fa-hammer" class="mr-1" />
-          Rebuild & Deploy
-        </div>
-        <div class="divider"></div>
-        <div class="button" @click="restartApplications">
-          <font-awesome-icon icon="fa-solid fa-rotate-right" class="mr-1" />
-          Restart All
-        </div>
-        <div class="divider"></div>
-        <div class="button text-danger-500" @click="deleteApplications">
-          <font-awesome-icon icon="fa-solid fa-trash" class="mr-1" />
-          Delete All
-        </div>
-      </div>
     </div>
     <!--  main section  -->
     <div class="mt-8 flex w-full flex-row gap-5">
@@ -693,16 +628,15 @@ const applyChanges = async () => {
         <!--  Persistent Volume    -->
         <div v-else-if="pageName === 'persistent-volumes'" class="flex w-full flex-col gap-3">
           <div class="flex flex-row flex-wrap gap-2">
-            <div class="w-min cursor-pointer rounded-md px-2 py-2 text-sm font-medium text-secondary-700">
+            <div class="w-min cursor-pointer rounded-md px-2 py-2 text-sm font-medium text-muted-foreground">
               Applications
             </div>
             <div
               v-for="application in applications"
               v-bind:key="application.id"
-              class="w-min cursor-pointer rounded-md border border-secondary-200 px-3 py-2 text-sm text-secondary-700 hover:bg-secondary-100"
+              class="w-min cursor-pointer rounded-md border px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground"
               :class="{
-                'border-secondary-400 bg-secondary-50':
-                  pageInfo.currentSelectedPersistentVolumeApplicationId === application.id
+                'bg-pri text-pri-foreground': pageInfo.currentSelectedPersistentVolumeApplicationId === application.id
               }"
               @click="pageInfo.currentSelectedPersistentVolumeApplicationId = application.id">
               {{ application.name }}
@@ -725,15 +659,15 @@ const applyChanges = async () => {
         <!--  Environment Variables  -->
         <div v-else-if="pageName === 'environment-variables'" class="flex w-full flex-col gap-3">
           <div class="flex flex-row flex-wrap gap-2">
-            <div class="w-min cursor-pointer rounded-md px-2 py-2 text-sm font-medium text-secondary-700">
+            <div class="w-min cursor-pointer rounded-md px-2 py-2 text-sm font-medium text-muted-foreground">
               Applications
             </div>
             <div
               v-for="application in applications"
               v-bind:key="application.id"
-              class="w-min cursor-pointer rounded-md border border-secondary-200 px-3 py-2 text-sm text-secondary-700 hover:bg-secondary-100"
+              class="w-min cursor-pointer rounded-md border px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground"
               :class="{
-                'border-secondary-400 bg-secondary-50':
+                ' bg-pri text-pri-foreground':
                   pageInfo.currentSelectedEnvironmentVariableApplicationId === application.id
               }"
               @click="pageInfo.currentSelectedEnvironmentVariableApplicationId = application.id">
@@ -754,16 +688,15 @@ const applyChanges = async () => {
         <!--   Config Mounts   -->
         <div v-else-if="pageName === 'static-app-config'" class="flex w-full flex-col gap-3">
           <div class="flex flex-row flex-wrap gap-2">
-            <div class="w-min cursor-pointer rounded-md px-2 py-2 text-sm font-medium text-secondary-700">
+            <div class="w-min cursor-pointer rounded-md px-2 py-2 text-sm font-medium text-muted-foreground">
               Applications
             </div>
             <div
               v-for="application in applications"
               v-bind:key="application.id"
-              class="w-min cursor-pointer rounded-md border border-secondary-200 px-3 py-2 text-sm text-secondary-700 hover:bg-secondary-100"
+              class="w-min cursor-pointer rounded-md border px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground"
               :class="{
-                'border-secondary-400 bg-secondary-50':
-                  pageInfo.currentSelectedConfigMountApplicationId === application.id
+                ' bg-pri text-pri-foreground': pageInfo.currentSelectedConfigMountApplicationId === application.id
               }"
               @click="pageInfo.currentSelectedConfigMountApplicationId = application.id">
               {{ application.name }}
@@ -797,11 +730,11 @@ const applyChanges = async () => {
 
 <style scoped>
 .deployment-head {
-  @apply relative flex items-center justify-center gap-2.5  rounded-full border border-secondary-300 px-2 py-1 text-sm font-normal;
+  @apply relative flex items-center justify-center gap-2.5  rounded-md border  px-2 py-1 text-sm font-normal;
 }
 
 .quick-actions {
-  @apply flex overflow-hidden rounded-full border border-secondary-300 text-sm  text-secondary-700;
+  @apply flex overflow-hidden rounded-full border border-secondary-300 text-sm  text-muted-foreground;
 
   .button {
     @apply cursor-pointer px-2.5 py-1 hover:bg-secondary-200;
@@ -817,7 +750,7 @@ const applyChanges = async () => {
 }
 
 .nav-element {
-  @apply min-w-max cursor-pointer rounded-md px-3 py-2 text-sm text-secondary-700 hover:bg-secondary-100;
+  @apply min-w-max cursor-pointer rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-secondary-100;
 }
 
 .router-link-exact-active {

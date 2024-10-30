@@ -76,7 +76,7 @@ const openCreateConfigMountModal = () => {
         <p v-if="selectedConfigId === null" class="italic">No config selected</p>
         <textarea
           rows="20"
-          class="mt-2 w-full rounded-lg border-gray-300 align-top shadow-sm focus:border-primary-500 focus:ring-primary-500"
+          class="mt-2 w-full rounded-lg border border-border align-top shadow-sm focus:border-pri focus:ring-pri"
           :value="configMountsMap[selectedConfigId].content"
           @input="(e) => onConfigContentChange(selectedConfigId, e.target.value)"></textarea>
       </div>
@@ -100,15 +100,15 @@ const openCreateConfigMountModal = () => {
     <template v-slot:body>
       <tr v-for="configMountKey in configMountsKeys" :key="configMountKey">
         <TableRow align="left">
-          <div class="text-sm font-medium text-gray-900">
+          <div class="text-sm font-medium text-foreground">
             {{ configMountsMap[configMountKey].mountingPath }}
           </div>
         </TableRow>
         <TableRow align="center">
-          <div class="text-sm text-gray-900">{{ configMountsMap[configMountKey].uid }}</div>
+          <div class="text-sm">{{ configMountsMap[configMountKey].uid }}</div>
         </TableRow>
         <TableRow align="center">
-          <div class="text-sm text-gray-900">{{ configMountsMap[configMountKey].gid }}</div>
+          <div class="text-sm">{{ configMountsMap[configMountKey].gid }}</div>
         </TableRow>
         <TableRow align="center" flex>
           <FilledButton type="primary" slim :click="() => openConfigModal(configMountKey)">View Config</FilledButton>
