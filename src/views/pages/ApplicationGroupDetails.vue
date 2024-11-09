@@ -20,6 +20,8 @@ import ConfigMountsEditor from '@/views/partials/DeployApplication/ConfigMountsE
 import FilledButton from '@/views/components/FilledButton.vue'
 import { Icon } from '@iconify/vue'
 import PageBar from '../components/PageBar.vue'
+import LinkSets from '../components/LinkSets.vue'
+import Separator from '../components/Separator.vue'
 
 const toast = useToast()
 
@@ -455,81 +457,52 @@ const applyChanges = async () => {
 <template>
   <!-- Main -->
   <PageBar :tabs="tabs" v-model="pageName">
-    <template v-slot:title
-      ><div class="flex items-center gap-2 font-medium">
-        <img
-          v-if="applicationGroupDetails.logo"
-          :src="applicationGroupDetails.logo"
-          class="h-4 w-4 rounded-sm"
+    <template v-slot:title>
+      <div class="flex items-center gap-2 font-medium">
+        <img v-if="applicationGroupDetails.logo" :src="applicationGroupDetails.logo" class="h-4 w-4 rounded-sm"
           alt="logo" />
         {{ applicationGroupDetails.name }}
-      </div></template
-    >
-    <template v-slot:subtitle
-      ><div class="flex gap-2">
-        <div class="flex items-center gap-2">
-          <div
-            v-if="ingressRules.length > 0"
-            class="deployment-head mt-3 max-w-[40vw]"
-            :class="{
-              '!pr-0.5': ingressRules.length > 0
-            }">
-            <Icon icon="lucide:globe" class="inline" />
-            <span v-for="(ingressRule, index) in ingressRules" :key="index">
-              <a
-                :href="
-                  ingressRule.protocol +
-                  '://' +
-                  ((ingressRule.domain?.name || null) ?? 'proxy_server_ip') +
-                  ':' +
-                  ingressRule.port.toString()
-                "
-                target="_blank"
-                class="has-popover rounded-md bg-pri px-2 py-1 text-pri-foreground">
-                <Icon icon="lucide:link" class="mr-0.5 inline text-xs" />
-                Link {{ index + 1 }}
-                <div class="popover">
-                  {{
-                    ingressRule.protocol +
-                    '://' +
-                    ((ingressRule.domain?.name || null) ?? 'proxy_server_ip') +
-                    ':' +
-                    ingressRule.port.toString()
-                  }}
-                </div>
-              </a>
-            </span>
-          </div>
-          <div v-else class="has-popover flex cursor-pointer gap-2">
-            <div class="deployment-head">
-              <Icon icon="lucide:globe" class="inline" />
-              <p class="text-warning-600">Not Exposed</p>
-            </div>
-            <div class="popover w-60">
-              No Ingress Rules available. Please open the <b>application details</b> page and create ingress rule to
-              expose your application to the internet.
-            </div>
-          </div>
-        </div>
-      </div></template
-    >
+      </div>
+    </template>
+    <template v-slot:subtitle>
+      <LinkSets :ingressRules="ingressRules" />
+    </template>
     <template v-slot:buttons>
-      <div class="flex flex-col">
+      <div class="flex flex-col gap-2 items-end">
         <div class="flex gap-2">
-          <FilledButton type="primary" @click="rebuildApplications">
-            <Icon icon="tabler:hammer" class="mr-1 h-5 w-5" />
-            Rebuild & Deploy
+          <FilledButton type="outline" @click="rebuildApplications">
+            <Icon icon="lucide:hammer" class="h-4 w-4" />
+            <!-- Rebuild & Deploy -->
           </FilledButton>
 
-          <FilledButton type="subtle" @click="restartApplications">
-            <Icon icon="lucide:rotate-cw" class="mr-1 h-4 w-4" />
-            Restart All
+          <FilledButton type="outline" @click="restartApplications">
+            <Icon icon="lucide:rotate-cw" class="h-4 w-4" />
+            <!-- Restart All -->
           </FilledButton>
 
           <FilledButton type="danger" @click="deleteApplications">
-            <Icon icon="lucide:trash" class="mr-1 h-4 w-4" />
-            Delete All
+            <Icon icon="lucide:trash" class="h-4 w-4" />
+            <!-- Delete All -->
           </FilledButton>
+        </div>
+        <div class="flex flex-row items-center text-center border rounded-md px-2">
+          <div class="py-2 flex flex-row items-center text-sm">
+            <Icon icon="lucide:blocks" class="me-1 text-info-500" />
+            {{ totalServiceCount }}
+            <!-- &nbsp;Services -->
+          </div>
+          <Separator orientation="vertical" class="h-full" />
+          <div class="py-2 flex flex-row items-center text-sm">
+            <Icon icon="lucide:heart-pulse" class="me-1 text-success-500" />
+            {{ healthyServiceCount }}
+            <!-- &nbsp;Healthy -->
+          </div>
+          <Separator orientation="vertical" class="h-full" />
+          <div class="py-2 flex flex-row items-center text-sm">
+            <Icon icon="lucide:heart-crack" class="me-1 text-danger-500" />
+            {{ unhealthyServiceCount }}
+            <!-- &nbsp;Unhealthy -->
+          </div>
         </div>
       </div>
     </template>
@@ -540,28 +513,11 @@ const applyChanges = async () => {
   <section v-else class="mx-auto w-full max-w-7xl px-4">
     <!--  Modals  -->
     <DeleteApplicationsModal ref="deleteApplicationsModal" :application-ids="applicationIds" />
-    <RestartApplicationsModal
-      ref="restartApplicationsModal"
-      :application-ids="applicationIds"
+    <RestartApplicationsModal ref="restartApplicationsModal" :application-ids="applicationIds"
       :on-done="refetchGroupApplicationDetails" />
-    <RebuildApplicationsModal
-      ref="rebuildApplicationsModal"
-      :application-ids="applicationIds"
+    <RebuildApplicationsModal ref="rebuildApplicationsModal" :application-ids="applicationIds"
       :on-done="refetchGroupApplicationDetails" />
-    <div class="flex flex-row items-center gap-5 px-3 text-center">
-      <div class="flex flex-row items-center text-sm">
-        <Icon icon="lucide:blocks" class="me-1 text-info-500" />
-        {{ totalServiceCount }}&nbsp;Services
-      </div>
-      <div class="flex flex-row items-center text-sm">
-        <Icon icon="lucide:heart-pulse" class="me-1 text-success-500" />
-        {{ healthyServiceCount }}&nbsp;Healthy
-      </div>
-      <div class="flex flex-row items-center text-sm">
-        <Icon icon="lucide:heart-crack" class="me-1 text-danger-500" />
-        {{ unhealthyServiceCount }}&nbsp;Unhealthy
-      </div>
-    </div>
+
     <!--  Second line  -->
     <div class="mt-3.5 flex w-full flex-row items-center justify-between">
       <div class="flex gap-2"></div>
@@ -618,9 +574,7 @@ const applyChanges = async () => {
               </TableMessage>
             </template>
             <template v-slot:body>
-              <ApplicationListRow
-                v-for="application in applications"
-                :key="application.id"
+              <ApplicationListRow v-for="application in applications" :key="application.id"
                 :application="application" />
             </template>
           </Table>
@@ -631,21 +585,15 @@ const applyChanges = async () => {
             <div class="w-min cursor-pointer rounded-md px-2 py-2 text-sm font-medium text-muted-foreground">
               Applications
             </div>
-            <div
-              v-for="application in applications"
-              v-bind:key="application.id"
+            <div v-for="application in applications" v-bind:key="application.id"
               class="w-min cursor-pointer rounded-md border px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground"
               :class="{
                 'bg-pri text-pri-foreground': pageInfo.currentSelectedPersistentVolumeApplicationId === application.id
-              }"
-              @click="pageInfo.currentSelectedPersistentVolumeApplicationId = application.id">
+              }" @click="pageInfo.currentSelectedPersistentVolumeApplicationId = application.id">
               {{ application.name }}
             </div>
           </div>
-          <div
-            class="w-full"
-            v-for="application in applications"
-            v-bind:key="application.id"
+          <div class="w-full" v-for="application in applications" v-bind:key="application.id"
             v-show="pageInfo.currentSelectedPersistentVolumeApplicationId === application.id">
             <PersistentVolumeBindingEditor
               :on-mounting-path-change="(key, value) => onPersistentVolumeMountingPathChange(application, key, value)"
@@ -662,21 +610,16 @@ const applyChanges = async () => {
             <div class="w-min cursor-pointer rounded-md px-2 py-2 text-sm font-medium text-muted-foreground">
               Applications
             </div>
-            <div
-              v-for="application in applications"
-              v-bind:key="application.id"
+            <div v-for="application in applications" v-bind:key="application.id"
               class="w-min cursor-pointer rounded-md border px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground"
               :class="{
                 ' bg-pri text-pri-foreground':
                   pageInfo.currentSelectedEnvironmentVariableApplicationId === application.id
-              }"
-              @click="pageInfo.currentSelectedEnvironmentVariableApplicationId = application.id">
+              }" @click="pageInfo.currentSelectedEnvironmentVariableApplicationId = application.id">
               {{ application.name }}
             </div>
           </div>
-          <EnvironmentVariablesEditor
-            v-for="application in applications"
-            v-bind:key="application.id"
+          <EnvironmentVariablesEditor v-for="application in applications" v-bind:key="application.id"
             v-show="pageInfo.currentSelectedEnvironmentVariableApplicationId === application.id"
             :on-variable-value-change="(key, value) => onEnvironmentVariableValueChange(application, key, value)"
             :on-variable-name-change="(key, name) => onEnvironmentVariableNameChange(application, key, name)"
@@ -691,33 +634,25 @@ const applyChanges = async () => {
             <div class="w-min cursor-pointer rounded-md px-2 py-2 text-sm font-medium text-muted-foreground">
               Applications
             </div>
-            <div
-              v-for="application in applications"
-              v-bind:key="application.id"
+            <div v-for="application in applications" v-bind:key="application.id"
               class="w-min cursor-pointer rounded-md border px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground"
               :class="{
                 ' bg-pri text-pri-foreground': pageInfo.currentSelectedConfigMountApplicationId === application.id
-              }"
-              @click="pageInfo.currentSelectedConfigMountApplicationId = application.id">
+              }" @click="pageInfo.currentSelectedConfigMountApplicationId = application.id">
               {{ application.name }}
             </div>
           </div>
-          <div
-            class="w-full"
-            v-for="application in applications"
-            v-bind:key="application.id"
+          <div class="w-full" v-for="application in applications" v-bind:key="application.id"
             v-show="pageInfo.currentSelectedConfigMountApplicationId === application.id">
             <ConfigMountsEditor
               :on-config-content-change="(key, content) => onConfigMountContentChange(application, key, content)"
               :delete-config-mount="(key) => deleteConfigMount(application, key)"
               :add-config-mount="(details) => addConfigMount(application, details)"
-              :config-mounts-map="configMountMap(application)"
-              :config-mounts-keys="configMountKeys(application)" />
+              :config-mounts-map="configMountMap(application)" :config-mounts-keys="configMountKeys(application)" />
           </div>
         </div>
         <!--  Update Config Notify bar  -->
-        <div
-          v-if="isAnyAppInfoChanged"
+        <div v-if="isAnyAppInfoChanged"
           class="mt-4 flex flex-row items-center justify-end gap-2 rounded-md border border-gray-300 p-2">
           <span class="mr-4 font-medium">You have updated some of the configuration</span>
           <FilledButton type="primary" :click="applyChanges" :loading="isApplyingChanges"> Apply Changes</FilledButton>
@@ -730,11 +665,11 @@ const applyChanges = async () => {
 
 <style scoped>
 .deployment-head {
-  @apply relative flex items-center justify-center gap-2.5  rounded-md border  px-2 py-1 text-sm font-normal;
+  @apply relative flex items-center justify-center gap-2.5 rounded-md border px-2 py-1 text-sm font-normal;
 }
 
 .quick-actions {
-  @apply flex overflow-hidden rounded-full border border-secondary-300 text-sm  text-muted-foreground;
+  @apply flex overflow-hidden rounded-full border border-secondary-300 text-sm text-muted-foreground;
 
   .button {
     @apply cursor-pointer px-2.5 py-1 hover:bg-secondary-200;

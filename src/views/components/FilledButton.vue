@@ -10,7 +10,7 @@ const props = defineProps({
   },
   click: {
     type: Function,
-    default: () => {}
+    default: () => { }
   },
   type: {
     type: String,
@@ -37,46 +37,36 @@ const isDisabled = computed(() => {
 </script>
 
 <template>
-  <button
-    :class="{
-      'bg-pri text-background hover:bg-pri/80': type === 'primary',
-      'border border-muted bg-transparent text-foreground hover:bg-zinc-200 hover:dark:bg-zinc-800': type === 'outline',
-      'bg-secondary-600 hover:bg-secondary-600/80 focus-visible:outline-secondary-600': type === 'secondary',
-      'bg-success-600 hover:bg-success-600/80 focus-visible:outline-success-600': type === 'success',
-      'bg-warning-600 hover:bg-warning-600/80 focus-visible:outline-warning-600': type === 'warning',
-      'bg-danger-600 hover:bg-danger-600/80 focus-visible:outline-danger-600': type === 'danger',
-      'bg-info-600 hover:bg-info-600/80 focus-visible:outline-info-600': type === 'info',
-      'bg-muted text-pri hover:bg-pri/20 focus-visible:outline-pri': type === 'subtle',
-      'font-medium text-foreground hover:text-foreground/80 focus-visible:outline-secondary-400': type === 'ghost',
-      'text-background dark:text-foreground': type !== 'primary',
-      'font-semibold': type !== 'ghost',
-      'cursor-not-allowed opacity-50': disabled,
-      'hover:bg-[type]-600/80': !disabled,
-      'cursor-progress': loading,
-      'px-3 py-2 text-sm': !slim,
-      'px-2 py-1 text-xs': slim,
-      'rounded-full': rounded,
-      'rounded-md': !rounded
-    }"
-    :disabled="isDisabled"
+  <button :class="{
+    'bg-pri text-background hover:bg-pri/80': type === 'primary',
+    'border border-border bg-transparent text-foreground hover:bg-sec': type === 'outline',
+    'bg-sec hover:bg-sec/80 focus-visible:outline-sec text-sec-foreground': type === 'secondary',
+    'bg-success-600 hover:bg-success-600/80 focus-visible:outline-success-600': type === 'success',
+    'bg-warning-600 hover:bg-warning-600/80 focus-visible:outline-warning-600': type === 'warning',
+    'bg-danger-600 hover:bg-danger-600/80 focus-visible:outline-danger-600': type === 'danger',
+    'bg-info-600 hover:bg-info-600/80 focus-visible:outline-info-600': type === 'info',
+    'bg-muted text-pri hover:bg-pri/20 focus-visible:outline-pri': type === 'subtle',
+    'font-medium text-foreground hover:text-foreground/80 focus-visible:outline-secondary-400': type === 'ghost',
+    'text-background dark:text-foreground': type !== 'primary',
+    'font-semibold': type !== 'ghost',
+    'cursor-not-allowed opacity-50': disabled,
+    'hover:bg-[type]-600/80': !disabled,
+    'cursor-progress': loading,
+    'px-3 py-2 text-sm': !slim,
+    'px-2 py-1 text-xs': slim,
+    'rounded-full': rounded,
+    'rounded-md': !rounded
+  }" :disabled="isDisabled"
     class="flex items-center justify-center shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-    type="button"
-    @click.stop="click">
+    type="button" @click.stop="click">
     <!--    spinner -->
-    <svg
-      v-if="loading"
-      :class="{
-        'h-5 w-5': !slim,
-        'h-3 w-3': slim,
-        'text-white': type !== 'ghost'
-      }"
-      class="-ml-1 mr-3 animate-spin"
-      fill="none"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg">
+    <svg v-if="loading" :class="{
+      'h-5 w-5': !slim,
+      'h-3 w-3': slim,
+      'text-white': type !== 'ghost'
+    }" class="-ml-1 mr-3 animate-spin" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-      <path
-        class="opacity-75"
+      <path class="opacity-75"
         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
         fill="currentColor"></path>
     </svg>

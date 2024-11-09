@@ -13,6 +13,7 @@ import { isNaN } from 'lodash'
 import UptimeChart from '@/views/components/UptimeChart.vue'
 import UpdateApplicationGroupModal from '@/views/partials/UpdateApplicationGroupModal.vue'
 import { camelCaseToSpacedCapitalized } from '@/vendor/utils.js'
+import LinkSets from '../components/LinkSets.vue'
 
 // Toast
 const toast = useToast()
@@ -239,10 +240,8 @@ const openApplicationGroupUpdateModal = () => {
 
 <template>
   <!-- Application group update modal -->
-  <UpdateApplicationGroupModal
-    ref="applicationGroupUpdateModalRef"
-    :current-group-id="applicationDetails.applicationGroup?.id ?? null"
-    :application-id="applicationDetails.id"
+  <UpdateApplicationGroupModal ref="applicationGroupUpdateModalRef"
+    :current-group-id="applicationDetails.applicationGroup?.id ?? null" :application-id="applicationDetails.id"
     :callback-on-update="refetchApplicationDetails" />
 
   <!-- Main -->
@@ -255,8 +254,7 @@ const openApplicationGroupUpdateModal = () => {
       <!--   App name     -->
       <div class="flex items-center gap-2">
         <div class="flex flex-row items-center gap-2 overflow-hidden">
-          <div
-            @click="openApplicationGroupUpdateModal"
+          <div @click="openApplicationGroupUpdateModal"
             class="flex cursor-pointer items-center justify-center rounded-full bg-secondary-600 px-3 py-1 text-sm font-medium text-white hover:bg-secondary-700">
             <span v-if="applicationDetails.applicationGroup">{{ applicationDetails.applicationGroup.name }}</span>
             <span v-else>no project</span>
@@ -296,28 +294,22 @@ const openApplicationGroupUpdateModal = () => {
           Sleeping
         </p>
         <div v-else-if="realtimeInfo.InfoFound" class="flex flex-row items-center gap-5 px-3 text-center">
-          <div
-            v-if="applicationDetails.realtimeInfo.HealthStatus === 'healthy'"
+          <div v-if="applicationDetails.realtimeInfo.HealthStatus === 'healthy'"
             class="flex flex-row items-center text-sm text-gray-700">
             <font-awesome-icon icon="fa-solid fa-heart-circle-check" class="me-1 text-success-500" />
             Healthy
           </div>
-          <div
-            v-else-if="applicationDetails.realtimeInfo.HealthStatus === 'unhealthy'"
+          <div v-else-if="applicationDetails.realtimeInfo.HealthStatus === 'unhealthy'"
             class="flex flex-row items-center text-sm text-gray-700">
             <font-awesome-icon icon="fa-solid fa-heart-circle-exclamation" class="me-1 text-danger-500" />
             Unhealthy
           </div>
-          <div
-            v-else-if="applicationDetails.realtimeInfo.HealthStatus === 'unknown'"
+          <div v-else-if="applicationDetails.realtimeInfo.HealthStatus === 'unknown'"
             class="flex flex-row items-center text-sm text-gray-700">
             <font-awesome-icon icon="fa-solid fa-heart-circle-xmark" class="me-1 text-warning-600" />
             Unknown
           </div>
-          <UptimeChart
-            hide-hover
-            small
-            label-position="right"
+          <UptimeChart hide-hover small label-position="right"
             v-if="!isNaN(realtimeReplicaCountPercentage) && deploymentMode === 'replicated'"
             :percentage="realtimeReplicaCountPercentage"
             :label="`(${realtimeInfo.RunningReplicas ?? 0} / ${applicationDetails.replicas})`" />
@@ -333,7 +325,7 @@ const openApplicationGroupUpdateModal = () => {
     <div class="mt-3.5 flex w-full flex-row items-center justify-between">
       <!--   Deployment info   -->
       <div class="flex gap-2">
-        <div class="flex items-center gap-2 text-gray-800">
+        <div class="flex items-center gap-2 ">
           <div v-if="applicationDetails.latestDeployment.upstreamType === 'git'" class="flex gap-2">
             <div class="deployment-head">
               <font-awesome-icon icon="fa-brands fa-github" />
@@ -342,16 +334,8 @@ const openApplicationGroupUpdateModal = () => {
               }}
             </div>
             <div class="deployment-head">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 class="lucide lucide-git-branch h-4 w-4">
                 <line x1="6" x2="6" y1="3" y2="15" />
                 <circle cx="18" cy="6" r="3" />
@@ -366,16 +350,8 @@ const openApplicationGroupUpdateModal = () => {
             {{ applicationDetails.latestDeployment.dockerImage }}
           </p>
           <p v-if="applicationDetails.latestDeployment.upstreamType === 'sourceCode'" class="deployment-head">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
               class="lucide lucide-upload h-4 w-4">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
               <polyline points="17 8 12 3 7 8" />
@@ -384,58 +360,9 @@ const openApplicationGroupUpdateModal = () => {
             Source-code uploaded manually
           </p>
         </div>
-        <div class="flex items-center gap-2 text-gray-800">
-          <div
-            v-if="isIngressRulesAvailable"
-            class="deployment-head max-w-[40vw]"
-            :class="{
-              '!pr-0.5': applicationDetails.ingressRules.length > 0
-            }">
-            <font-awesome-icon icon="fa-solid fa-globe" />
-            <span v-for="(ingressRule, index) in applicationDetails.ingressRules" :key="index">
-              <a
-                :href="
-                  ingressRule.protocol +
-                  '://' +
-                  ((ingressRule.domain?.name || null) ?? 'proxy_server_ip') +
-                  ':' +
-                  ingressRule.port.toString()
-                "
-                target="_blank"
-                class="has-popover rounded-full bg-primary-500 px-2 py-1 text-secondary-100">
-                <font-awesome-icon icon="fa-solid fa-link" class="mr-0.5 text-xs" />
-                Link {{ index + 1 }}
-                <div class="popover">
-                  {{
-                    ingressRule.protocol +
-                    '://' +
-                    ((ingressRule.domain?.name || null) ?? 'proxy_server_ip') +
-                    ':' +
-                    ingressRule.port.toString()
-                  }}
-                </div>
-              </a>
-            </span>
-          </div>
-          <div v-else class="has-popover flex gap-2">
-            <div class="deployment-head">
-              <font-awesome-icon icon="fa-solid fa-globe" />
-              <p class="text-warning-600">Not Exposed</p>
-              <RouterLink
-                :to="{
-                  name: 'Application Details Ingress Rules',
-                  params: { id: $route.params.id }
-                }"
-                class="font-semibold hover:cursor-pointer hover:text-primary-600">
-                <font-awesome-icon icon="fa-solid fa-plus" />
-              </RouterLink>
-            </div>
-            <div class="popover w-60">
-              No Ingress Rules available. Click the <b>plus</b> button to add ingress rules if you want to expose the
-              application to the internet.
-            </div>
-          </div>
-        </div>
+
+        <LinkSets :ingress-rules="applicationDetails.ingressRules" :show-add-link="true"
+          add-link-route="Application Details Ingress Rules" />
       </div>
       <!--    Quick Actions    -->
       <div class="quick-actions">
@@ -468,20 +395,15 @@ const openApplicationGroupUpdateModal = () => {
         <!--  Nested Router View  -->
         <RouterView />
         <!--  Update Config Notify bar  -->
-        <div
-          v-if="applicationUpdater.isConfigurationUpdated"
+        <div v-if="applicationUpdater.isConfigurationUpdated"
           class="mt-4 flex flex-row items-center justify-end gap-2 rounded-md border border-gray-300 p-2">
           <span class="mr-4 font-medium">You have updated some of the configuration</span>
-          <FilledButton
-            :click="applicationUpdater.applyConfigurationChanges"
-            :loading="applicationUpdater.isDeployRequestSubmitting"
-            type="primary">
+          <FilledButton :click="applicationUpdater.applyConfigurationChanges"
+            :loading="applicationUpdater.isDeployRequestSubmitting" type="primary">
             Apply Changes
           </FilledButton>
-          <FilledButton
-            :click="applicationUpdater.cancelConfigurationChanges"
-            :disabled="applicationUpdater.isDeployRequestSubmitting"
-            type="secondary">
+          <FilledButton :click="applicationUpdater.cancelConfigurationChanges"
+            :disabled="applicationUpdater.isDeployRequestSubmitting" type="secondary">
             Cancel
           </FilledButton>
         </div>
@@ -492,11 +414,11 @@ const openApplicationGroupUpdateModal = () => {
 
 <style scoped>
 .deployment-head {
-  @apply relative flex items-center justify-center gap-2.5  rounded-full border border-secondary-300 px-2 py-1 text-sm font-normal;
+  @apply relative flex items-center justify-center gap-2.5 rounded-md border border-border px-2 py-1 h-9 text-sm font-normal;
 }
 
 .quick-actions {
-  @apply flex overflow-hidden rounded-full border border-secondary-300 text-sm  text-secondary-700;
+  @apply flex overflow-hidden rounded-full border border-secondary-300 text-sm text-secondary-700;
 
   .button {
     @apply cursor-pointer px-2.5 py-1 hover:bg-secondary-200;

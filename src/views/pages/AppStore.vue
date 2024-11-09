@@ -4,6 +4,7 @@ import ModalDialog from '@/views/components/ModalDialog.vue'
 import OutlinedButton from '@/views/components/OutlinedButton.vue'
 import DotLoader from '@/views/components/DotLoader.vue'
 import { useRouter } from 'vue-router'
+import Input from '../components/Input.vue'
 
 const router = useRouter()
 const storeEndpoints = shallowRef(['https://raw.githubusercontent.com/swiftwave-org/app-store/main/store.json'])
@@ -106,32 +107,19 @@ const openStackFileForInstall = (stack) => {
     <DotLoader />
   </div>
   <!-- Main -->
-  <section v-else class="flex w-full flex-row items-start gap-2 overflow-hidden">
+  <section v-else class="flex w-full flex-row items-start gap-2 overflow-hidden p-4">
     <div class="navbar">
-      <input
-        class="block w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500"
-        placeholder="Search Apps"
-        v-model="searchText"
-        @keydown.enter="searchApps"
-        v-debounce:200ms="searchApps"
-        type="text" />
-      <div class="w-full select-none rounded-md px-2 py-2 text-sm font-medium text-black">Choose Category</div>
-      <div
-        class="nav-element"
-        @click="chooseCategory('')"
-        :class="{
-          'nav-active': selectedCategory === ''
-        }">
+      <Input class="" placeholder="Search Apps" v-model="searchText" @keydown.enter="searchApps"
+        v-debounce:200ms="searchApps" type="text" />
+      <div class="w-full select-none rounded-md px-2 py-2 text-sm font-medium ">Choose Category</div>
+      <div class="nav-element" @click="chooseCategory('')" :class="{
+        'nav-active': selectedCategory === ''
+      }">
         All Apps
       </div>
-      <div
-        v-for="category in categories"
-        :key="category"
-        class="nav-element"
-        @click="chooseCategory(category)"
-        :class="{
-          'nav-active': selectedCategory === category
-        }">
+      <div v-for="category in categories" :key="category" class="nav-element" @click="chooseCategory(category)" :class="{
+        'nav-active': selectedCategory === category
+      }">
         {{ category }}
       </div>
     </div>
@@ -143,31 +131,28 @@ const openStackFileForInstall = (stack) => {
         <p class="ml-4 mt-10 text-xl font-medium">No apps found</p>
         <p class="mt-3">
           If you think the app should be here, Raise a request in
-          <a href="https://github.com/swiftwave-org/app-store" target="_blank" class="font-semibold text-primary-600"
-            >Swiftwave App Store</a
-          >.
+          <a href="https://github.com/swiftwave-org/app-store" target="_blank"
+            class="font-semibold text-primary-600">Swiftwave App Store</a>.
         </p>
       </div>
       <!--    Apps List (If available) -->
-      <div v-else class="grid grid-cols-5 gap-2 pr-2">
+      <div v-else class="grid grid-cols-5 gap-2 pr-2 ">
         <!-- Component  -->
-        <div
-          @click="() => chooseApp(app)"
-          v-for="app in appsShown"
-          :key="app.id"
-          class="flex h-[200px] cursor-pointer flex-col overflow-hidden rounded-xl border border-secondary-300 p-2 hover:border-primary-500 hover:shadow-sm">
+        <div @click="() => chooseApp(app)" v-for="app in appsShown" :key="app.id"
+          class="flex h-[200px] cursor-pointer flex-col overflow-hidden rounded-md border border-border p-0 hover:border-pri hover:shadow-sm bg-background dark:bg-background">
           <!--    Header    -->
-          <div class="flex flex-row gap-3 border-b pb-2">
+          <div class="flex flex-row gap-3 border-b p-2 bg-sec">
             <div class="h-12 w-12 rounded-md p-1.5">
               <img :src="app.logo" class="h-full w-full" :alt="app.title" />
             </div>
             <div>
-              <p class="text-base font-semibold text-gray-800">{{ app.title }}</p>
+              <p class="text-base font-semibold text-muted-foreground">{{ app.title }}</p>
               <p class="text-sm">{{ app.category }}</p>
             </div>
           </div>
           <!--    Description Body    -->
-          <div class="mt-2 h-full overflow-hidden text-ellipsis p-1 text-justify text-sm text-secondary-800">
+          <div
+            class="mt-2 h-full overflow-hidden text-ellipsis p-4 text-justify text-xs text-foreground dark:text-muted-foreground">
             {{ app.description }}
           </div>
         </div>
@@ -180,12 +165,8 @@ const openStackFileForInstall = (stack) => {
     <template v-slot:body>
       <p>Choose the preferred version -</p>
       <div class="mt-6 flex flex-col gap-2">
-        <OutlinedButton
-          :click="() => openStackFileForInstall(stack)"
-          class="w-full"
-          type="primary"
-          v-for="stack in selectedApp.stacks"
-          :key="stack.id">
+        <OutlinedButton :click="() => openStackFileForInstall(stack)" class="w-full" type="primary"
+          v-for="stack in selectedApp.stacks" :key="stack.id">
           {{ stack.title }}
         </OutlinedButton>
       </div>
@@ -207,14 +188,14 @@ const openStackFileForInstall = (stack) => {
 }
 
 .navbar {
-  @apply flex h-min min-w-[200px] max-w-[200px] select-none flex-col flex-wrap gap-1 rounded-lg border border-secondary-300 p-1.5;
+  @apply flex h-min min-w-[200px] max-w-[200px] select-none flex-col flex-wrap gap-1 rounded-lg border border-border p-1.5 bg-background dark:bg-background;
 }
 
 .nav-element {
-  @apply min-w-max cursor-pointer rounded-md px-3 py-2 text-sm text-secondary-700 hover:bg-secondary-100;
+  @apply min-w-max cursor-pointer rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-sec hover:text-sec-foreground;
 }
 
 .nav-active {
-  @apply bg-secondary-100 font-medium text-black;
+  @apply bg-pri text-pri-foreground font-medium;
 }
 </style>

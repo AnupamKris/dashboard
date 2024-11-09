@@ -88,27 +88,21 @@ function selectSystemLog(log) {
     <template v-slot:subtitle>It contains all the system logs and error logs</template>
     <template v-slot:buttons>
       <FilledButton type="ghost" :click="refetchSystemLogs">
-        <font-awesome-icon
-          icon="fa-solid fa-arrows-rotate"
-          :class="{
-            'animate-spin ': systemLogsLoading
-          }" />&nbsp;&nbsp;Refresh List
+        <font-awesome-icon icon="fa-solid fa-arrows-rotate" :class="{
+          'animate-spin ': systemLogsLoading
+        }" />&nbsp;&nbsp;Refresh List
       </FilledButton>
     </template>
   </PageBar>
 
   <div class="mt-8 flex w-full gap-4">
     <!--  System logs list  -->
-    <div
-      class="scrollbox flex max-h-[80vh] w-[400px] flex-col gap-2 overflow-y-auto pr-2"
+    <div class="scrollbox flex max-h-[80vh] w-[400px] flex-col gap-2 overflow-y-auto pr-2"
       v-if="systemLogsResult.length > 0">
-      <div
-        @click="() => selectSystemLog(log)"
-        :key="log.id"
-        v-for="log in systemLogsResult"
-        class="w-full cursor-pointer select-none rounded-lg border-2 border-secondary-200 p-3 hover:bg-secondary-200"
+      <div @click="() => selectSystemLog(log)" :key="log.id" v-for="log in systemLogsResult"
+        class="w-full cursor-pointer select-none rounded-lg border-2 border-border p-3 hover:bg-sec hover:text-sec-foreground"
         :class="{
-          'border-secondary-400 bg-secondary-200': log.name === logFileName
+          'border-pri bg-pri text-pri-foreground': log.name === logFileName
         }">
         <p class="font-medium">{{ log.name }}</p>
         <p>{{ moment(new Date(log.modTime)).format('Do MMMM YYYY - h:mm:ss a') }}</p>
@@ -120,13 +114,11 @@ function selectSystemLog(log) {
     </div>
     <!--  Server log result  -->
     <div
-      class="relative max-h-[80vh] w-full overflow-y-hidden whitespace-pre-wrap rounded-lg border-2 border-secondary-200 bg-secondary-100 p-4">
+      class="relative max-h-[80vh] w-full overflow-y-hidden whitespace-pre-wrap rounded-lg border border-border bg-background p-4">
       <FilledButton type="secondary" :click="loadServerLogsContent" class="absolute right-2 top-2">
-        <font-awesome-icon
-          icon="fa-solid fa-arrows-rotate"
-          :class="{
-            'animate-spin ': systemLogsContentLoading
-          }" />&nbsp;&nbsp;Refresh Logs
+        <font-awesome-icon icon="fa-solid fa-arrows-rotate" :class="{
+          'animate-spin ': systemLogsContentLoading
+        }" />&nbsp;&nbsp;Refresh Logs
       </FilledButton>
       <div v-if="logFileName === ''">
         <i>Select a record from left side to view content</i>

@@ -30,12 +30,12 @@ const props = defineProps({
   onChange: {
     type: Function,
     required: false,
-    default: () => {}
+    default: () => { }
   },
   onNewOption: {
     type: Function,
     required: false,
-    default: () => {}
+    default: () => { }
   }
 })
 
@@ -51,8 +51,8 @@ const filteredOptions = computed(() =>
   !query.value
     ? optionsIncludingQuery.value
     : optionsIncludingQuery.value.filter((op) => {
-        return props.titleFromOption(op).toLowerCase().includes(query.value.toLowerCase())
-      })
+      return props.titleFromOption(op).toLowerCase().includes(query.value.toLowerCase())
+    })
 )
 const getDisplayValue = (i) => {
   for (let j = 0; j < props.options.length; j++) {
@@ -74,26 +74,20 @@ watch(selectedOptionValue, (newValue) => {
 <template>
   <Combobox v-model="selectedOptionValue">
     <div
-      class="relative w-full overflow-hidden rounded-md border border-gray-400 shadow transition-all delay-75 hover:border-primary-500 focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
-      <ComboboxInput
-        :display-value="(i) => getDisplayValue(i)"
-        @change="query = $event.target.value"
-        placeholder="Start typing to filter..."
-        class="w-full border-none text-sm focus:ring-0" />
-      <ComboboxButton class="absolute inset-y-0 right-0 flex items-center pr-2">
-        <font-awesome-icon icon="fa-solid fa-caret-down" class="h-5 w-5 text-gray-400" aria-hidden="true" />
+      class="relative w-full overflow-hidden rounded-md border border-border shadow transition-all delay-75 hover:border-pri focus:border-pri focus:ring-pri sm:text-sm">
+      <ComboboxInput :display-value="(i) => getDisplayValue(i)" @change="query = $event.target.value"
+        placeholder="Start typing to filter..." class="w-full border-none text-sm focus:ring-0 bg-transparent" />
+      <ComboboxButton class="absolute inset-y-0 right-0 flex items-center pr-2 ">
+        <Icon icon="lucide:chevron-down" class="h-5 w-5" aria-hidden="true" />
       </ComboboxButton>
     </div>
 
     <ComboboxOptions
-      class="scrollbox mt-1 max-h-40 overflow-y-auto overflow-x-hidden rounded-md border-2 border-secondary-200 shadow">
-      <ComboboxOption
-        v-for="op in filteredOptions"
-        :key="valueFromOption(op)"
-        :value="valueFromOption(op)"
-        class="flex items-center justify-between px-3 py-2 text-sm font-medium hover:bg-primary-500 hover:text-white">
+      class="scrollbox mt-1 max-h-40 overflow-y-auto overflow-x-hidden rounded-md border border-border shadow">
+      <ComboboxOption v-for="op in filteredOptions" :key="valueFromOption(op)" :value="valueFromOption(op)"
+        class="flex items-center justify-between px-3 py-2 text-sm font-medium hover:bg-sec hover:text-sec-foreground">
         <span>{{ titleFromOption(op) }}</span>
-        <font-awesome-icon icon="fa-solid fa-check" v-show="valueFromOption(op) === selectedOptionValue" />
+        <Icon icon="lucide:check" v-show="valueFromOption(op) === selectedOptionValue" />
       </ComboboxOption>
     </ComboboxOptions>
   </Combobox>
